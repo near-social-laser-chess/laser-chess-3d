@@ -6,7 +6,7 @@ const highlightedCells = [];
 
 export function getCell(x, y) {
     // get cell index in matrix by normalized coordinates (0 <= x,y <= 1)
-    const row = Math.floor(y * 8);
+    const row = 7 - Math.floor(y * 8);
     const col = Math.floor(x * 10);
     return {
         row: row,
@@ -31,7 +31,7 @@ export const highlightCell = (row, col, color) => {
     const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.FrontSide} );
     const plane = new THREE.Mesh( geometry, material );
     plane.position.x = col - 5 + 0.5;
-    plane.position.z = (row - 4 + 0.5) * -1;
+    plane.position.z = row - 4 + 0.5;
     plane.position.y = 0.001;
     plane.rotation.x = Math.PI / 2 * -1;
     scene.add(plane);
