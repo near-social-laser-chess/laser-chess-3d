@@ -3,8 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Laser chess</title>
+    <style>
+        body { margin: 0; }
+    </style>
 </head>
 <body>
-
+<!--    <script type="module" src="https://unpkg.com/three@0.149.0/examples/jsm/loaders/FBXLoader.js"></script>-->
+<!--    <script type="module" src="https://unpkg.com/three@0.149.0/build/three.module.js"></script>-->
+<!--    <script type="module" src="ui/scene.js"></script>-->
+<!--    <script src="index.js"></script>-->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.149.0/build/three.module.js",
+          "OBJLoader": "https://unpkg.com/three@0.149.0/examples/jsm/loaders/OBJLoader.js",
+          "OrbitControls": "https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js",
+          "MTLLoader": "https://unpkg.com/three@0.149.0/examples/jsm/loaders/MTLLoader.js",
+          "scene": "/ui/scene.js",
+          "board": "/ui/board.js",
+          "utils": "/controller/utils.js"
+        }
+      }
+    </script>
+    <script type="module" src="index.js"></script>
 </body>
 </html>

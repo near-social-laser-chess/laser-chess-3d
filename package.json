@@ -1,0 +1,7 @@
+{
+  "name": "laser-chess-3d",
+  "version": "1.0.0",
+  "dependencies": {
+    "three": "^0.149.0"
+  }
+}
