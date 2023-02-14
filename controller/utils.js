@@ -11,8 +11,6 @@ export const calculateClickedPoint = (event) => {
     raycaster.setFromCamera(pointer, camera);
     const intersects = raycaster.intersectObject(board, false);
     if (intersects.length > 0) {
-        console.log(intersects[0].point);
-        console.log(intersects[0].uv);
         return intersects[0];
     }
 }
