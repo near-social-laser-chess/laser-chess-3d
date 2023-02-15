@@ -55,13 +55,13 @@ class Game {
         }
     }
 
-    computeAIMovement(state) {
-        const newBoard = new Board({ squares: state.squares });
+    computeAIMovement() {
+        const newBoard = new Board({ squares: this.squares });
 
         const ai = new AI();
         const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
-        state.ai.movement = movement.serialize();
-        state.movementIsLocked = true;
+        this.ai.movement = movement.serialize();
+        this.movementIsLocked = true;
     }
 
     toggleAI() {
@@ -96,6 +96,11 @@ class Game {
 
     selectPiece(location) {
         this.selectedPieceLocation = location
+    }
+
+    getMoveForSelectedPiece() {
+        const board = new Board({ squares: this.squares });
+        return board.getMovesForPieceAtLocation(this.selectedPieceLocation);
     }
 
     unselectPiece() {
