@@ -3,9 +3,25 @@ import {boardObj, scene} from "scene";
 
 export const board = boardObj;
 
-board.highlightedCells = [];
+board.cells = [];
 
-board.getCell = (x, y) => {
+const initCells = () => {
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 10; col++) {
+            board.cells.push({
+                row: row,
+                col: col,
+                isHighlighted: false,
+                highlightObj: null,
+                piece: null
+            })
+        }
+    }
+}
+
+initCells();
+
+board.getCellByCoords = (x, y) => {
     // get cell index in matrix by normalized coordinates (0 <= x,y <= 1)
     const row = 7 - Math.floor(y * 8);
     const col = Math.floor(x * 10);
@@ -15,12 +31,20 @@ board.getCell = (x, y) => {
     }
 }
 
-board.findHighlightedCell = (row, col) => {
-    return board.highlightedCells.find((obj) => obj.row === row && obj.col === col);
+board.findCell = (row, col) => {
+    return board.cells.find((obj) => obj.row === row && obj.col === col);
 }
 
 board.isCellHighlighted = (row, col) => {
-    return !!board.findHighlightedCell(row, col);
+    return board.findCell(row, col).isHighlighted;
+}
+
+board.getCellCenter = (row, col) => {
+    return {
+        x: col - 5 + 0.5,
+        z: row - 4 + 0.5,
+        y: 0
+    }
 }
 
 board.highlightCell = (row, col, color) => {
@@ -31,26 +55,31 @@ board.highlightCell = (row, col, color) => {
     const geometry = new THREE.PlaneGeometry( 1, 1 );
     const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.FrontSide} );
     const plane = new THREE.Mesh( geometry, material );
-    plane.position.x = col - 5 + 0.5;
-    plane.position.z = row - 4 + 0.5;
+
+    const center = board.getCellCenter(row, col);
+    plane.position.x = center.x;
+    plane.position.z = center.z;
     plane.position.y = 0.001;
     plane.rotation.x = Math.PI / 2 * -1;
     scene.add(plane);
-    const cell = {row: row, col: col, highlightObj: plane};
-    board.highlightedCells.push(cell);
+    const cell = board.findCell(row, col);
+    cell.highlightObj = plane;
+    cell.isHighlighted = true;
     return cell;
 }
 
 board.unhighligtCell = (row, col) => {
     if (!board.isCellHighlighted(row, col))
         return;
-    const highlightedCell = board.findHighlightedCell(row, col);
+    const highlightedCell = board.findCell(row, col);
     scene.remove(highlightedCell.highlightObj)
 
-    board.highlightedCells.splice(
-        board.highlightedCells.indexOf(highlightedCell),
-        1
-    );
+    highlightedCell.highlightObj = null;
+    highlightedCell.isHighlighted = false
+    // board.cells.splice(
+    //     board.cells.indexOf(highlightedCell),
+    //     1
+    // );
 }
 
 board.switchCellHighlight = (row, col, color) => {

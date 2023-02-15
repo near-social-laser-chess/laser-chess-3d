@@ -1,6 +1,7 @@
 import {scene, camera, animate, renderer} from "scene";
 import {board} from "board";
 import {calculateClickedPoint} from "utils";
+import {spawnPiece} from "spawn";
 
 board.drawCells();
 animate();
@@ -8,9 +9,10 @@ animate();
 document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
     if (point) {
-        const cell = board.getCell(...point.uv);
+        const cell = board.getCellByCoords(...point.uv);
         console.log(cell);
-        board.switchCellHighlight(cell.row, cell.col);
+        // board.switchCellHighlight(cell.row, cell.col);
+        spawnPiece("yellowDeflector", cell.row, cell.col, 0);
     }
 });
 
