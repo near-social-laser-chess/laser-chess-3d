@@ -27,7 +27,6 @@ const SPECIAL_SQUARES = [
  * Class representing Setup Notation.
  */
 class SN {
-
     /**
      * Validates a SN according to the notation.
      * @see https://github.com/kishannareshpal/laserchess/blob/master/docs/SetupNotation.md

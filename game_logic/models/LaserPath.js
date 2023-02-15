@@ -9,7 +9,7 @@ class LaserPath {
      * @param {LaserDirectionsEnum} direction the direction that the laser is poining in this location.
      * @param {LaserActionTypesEnum} actionType the action taken by the laser on this location.
      * @param {Location} location the location where the laser is reflecting at the moment.
-     */
+     **/
     constructor(eventType, direction, actionType, location) {
         this.eventType = eventType;
         this.direction = direction;
