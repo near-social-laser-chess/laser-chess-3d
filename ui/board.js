@@ -2,11 +2,28 @@ import * as THREE from "three";
 import {boardObj, scene} from "scene";
 
 export const board = boardObj;
-const highlightedCells = [];
 
-export function getCell(x, y) {
+board.cells = [];
+
+const initCells = () => {
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 10; col++) {
+            board.cells.push({
+                row: row,
+                col: col,
+                isHighlighted: false,
+                highlightObj: null,
+                piece: null
+            })
+        }
+    }
+}
+
+initCells();
+
+board.getCellByCoords = (x, y) => {
     // get cell index in matrix by normalized coordinates (0 <= x,y <= 1)
-    const row = Math.floor(y * 8);
+    const row = 7 - Math.floor(y * 8);
     const col = Math.floor(x * 10);
     return {
         row: row,
@@ -14,57 +31,70 @@ export function getCell(x, y) {
     }
 }
 
-export const findHighlightedCell = (row, col) => {
-    return highlightedCells.find((obj) => obj.row === row && obj.col === col);
+board.findCell = (row, col) => {
+    return board.cells.find((obj) => obj.row === row && obj.col === col);
 }
 
-export const isCellHighlighted = (row, col) => {
-    return !!findHighlightedCell(row, col);
+board.isCellHighlighted = (row, col) => {
+    return board.findCell(row, col).isHighlighted;
 }
 
-export const highlightCell = (row, col, color) => {
-    if (isCellHighlighted(row, col))
+board.getCellCenter = (row, col) => {
+    return {
+        x: col - 5 + 0.5,
+        z: row - 4 + 0.5,
+        y: 0
+    }
+}
+
+board.highlightCell = (row, col, color) => {
+    if (board.isCellHighlighted(row, col))
         return;
     if (color == null)
         color = 0x00ff00;
     const geometry = new THREE.PlaneGeometry( 1, 1 );
     const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.FrontSide} );
     const plane = new THREE.Mesh( geometry, material );
-    plane.position.x = col - 5 + 0.5;
-    plane.position.z = (row - 4 + 0.5) * -1;
+
+    const center = board.getCellCenter(row, col);
+    plane.position.x = center.x;
+    plane.position.z = center.z;
     plane.position.y = 0.001;
     plane.rotation.x = Math.PI / 2 * -1;
     scene.add(plane);
-    const cell = {row: row, col: col, threeObj: plane};
-    highlightedCells.push(cell);
+    const cell = board.findCell(row, col);
+    cell.highlightObj = plane;
+    cell.isHighlighted = true;
     return cell;
 }
 
-export const unhighligtCell = (row, col) => {
-    if (!isCellHighlighted(row, col))
+board.unhighligtCell = (row, col) => {
+    if (!board.isCellHighlighted(row, col))
         return;
-    const highlightedCell = findHighlightedCell(row, col);
-    scene.remove(highlightedCell.threeObj)
+    const highlightedCell = board.findCell(row, col);
+    scene.remove(highlightedCell.highlightObj)
 
-    highlightedCells.splice(
-        highlightedCells.indexOf(highlightedCell),
-        1
-    );
+    highlightedCell.highlightObj = null;
+    highlightedCell.isHighlighted = false
+    // board.cells.splice(
+    //     board.cells.indexOf(highlightedCell),
+    //     1
+    // );
 }
 
-export const switchCellHighlight = (row, col, color) => {
+board.switchCellHighlight = (row, col, color) => {
     // returns true if cell was highlighted, otherwise returns false
     // uses color argument when highlighting
-    if (!isCellHighlighted(row, col)) {
-        highlightCell(row, col, color);
+    if (!board.isCellHighlighted(row, col)) {
+        board.highlightCell(row, col, color);
         return true;
     }
-    unhighligtCell(row, col)
+    board.unhighligtCell(row, col)
     return false;
 }
 
 // for testing purposes only
-export function drawCells() {
+board.drawCells = () => {
     const material = new THREE.LineBasicMaterial( { color: 0x000000 } );
     for (let x = -4; x <= 4; x++) {
         const points = [];
@@ -77,8 +107,8 @@ export function drawCells() {
             8, //Roundness of Tube
             false //closed
         );
-        const line = new THREE.Line( geometry, material );
-        scene.add( line );
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
     }
     for (let z = -4; z <= 4; z++) {
         const points = [];
@@ -91,7 +121,7 @@ export function drawCells() {
             8, //Roundness of Tube
             false //closed
         );
-        const line = new THREE.Line( geometry, material );
-        scene.add( line );
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
     }
 }

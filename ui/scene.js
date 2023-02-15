@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
 
-const request = await fetch('./ui/scene.json');
+const request = await fetch('/assets/scene.json');
 const sceneJsonString = await request.json();
 
 const objLoader = new THREE.ObjectLoader();
