@@ -123,7 +123,7 @@ board.movePiece = (startCell, endCell) => {
 }
 
 class RotatePieceRenderCallback extends RenderCallback {
-    constructor(pieceObj, angle, interval = 0.005) {
+    constructor(pieceObj, angle, interval = 0.05) {
         // angle in degrees. negative is counterclockwise, positive is clockwise
         super();
         this.pieceObj = pieceObj;

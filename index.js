@@ -1,5 +1,5 @@
 import {camera, animate, renderer, rotateButtonClockwise,
-    rotateButtonCounterClockwise, disableRotateButtons, enableRotateButtons} from "./ui/scene.js";
+    rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
 import {board} from "./ui/board.js";
 import {calculateClickedPoint} from "./controller/utils.js";
 import {spawnPiece, pieceModels} from "./ui/spawn.js";
