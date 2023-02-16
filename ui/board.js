@@ -122,6 +122,43 @@ board.movePiece = (startCell, endCell) => {
     startCell.piece = null;
 }
 
+class RotatePieceRenderCallback extends RenderCallback {
+    constructor(pieceObj, angle, interval = 0.005) {
+        // angle in degrees. negative is counterclockwise, positive is clockwise
+        super();
+        this.pieceObj = pieceObj;
+        angle = angle / 180 * Math.PI * -1;
+        this.angle = angle;
+        this.endAngle = this.pieceObj.rotation.y + angle;
+        if (angle < 0)
+            if (this.pieceObj.rotation.y === 0)
+                this.endAngle = Math.PI * 2 - this.pieceObj.rotation.y + angle;
+            else
+                this.endAngle = this.pieceObj.rotation.y + angle;
+        this.interval = interval;
+        this.movement = angle * this.interval;
+    }
+
+    draw() {
+        if (Math.abs(this.pieceObj.rotation.y - this.endAngle) <= this.interval || Math.abs(Math.PI * 2 + this.pieceObj.rotation.y - this.endAngle) <= this.interval) {
+            this.pieceObj.rotation.y = this.endAngle;
+            this.isDrawn = true;
+            if (this.angle > 0 && this.pieceObj.rotation.y >= Math.PI * 2) {
+                this.pieceObj.rotation.y = 0;
+            }
+            return;
+        }
+        this.pieceObj.rotation.y += this.movement;
+    }
+}
+
+board.rotatePiece = (cell, angle) => {
+    if (cell.piece == null)
+        return;
+    const renderCallback = new RotatePieceRenderCallback(cell.piece, angle, 0.05);
+    board.addRenderCallback(renderCallback);
+}
+
 // for testing purposes only
 board.drawCells = () => {
     const material = new THREE.LineBasicMaterial( { color: 0x000000 } );

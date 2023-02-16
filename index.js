@@ -5,7 +5,7 @@ import {spawnPiece, pieceModels} from "./ui/spawn.js";
 
 board.drawCells();
 let currentCell = board.findCell(3, 4);
-spawnPiece("redKing", 3, 4)
+spawnPiece("yellowDeflector", 3, 4)
 animate();
 let index = 0;
 
@@ -42,4 +42,15 @@ document.addEventListener('resize', (e) => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
+});
+
+const rotateButtonCounterClockwise = document.querySelector("button[aria-label='rotate piece left']");
+const rotateButtonClockwise = document.querySelector("button[aria-label='rotate piece right']");
+
+rotateButtonCounterClockwise.addEventListener('click', () => {
+    board.rotatePiece(currentCell, -90);
+});
+
+rotateButtonClockwise.addEventListener('click', () => {
+    board.rotatePiece(currentCell, 90);
 });
