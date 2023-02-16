@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {boardObj, scene} from "scene";
+import {boardObj, scene, RenderCallback} from "scene";
 
 export const board = boardObj;
 
@@ -25,10 +25,7 @@ board.getCellByCoords = (x, y) => {
     // get cell index in matrix by normalized coordinates (0 <= x,y <= 1)
     const row = 7 - Math.floor(y * 8);
     const col = Math.floor(x * 10);
-    return {
-        row: row,
-        col: col
-    }
+    return board.findCell(row, col);
 }
 
 board.findCell = (row, col) => {
@@ -39,12 +36,8 @@ board.isCellHighlighted = (row, col) => {
     return board.findCell(row, col).isHighlighted;
 }
 
-board.getCellCenter = (row, col) => {
-    return {
-        x: col - 5 + 0.5,
-        z: row - 4 + 0.5,
-        y: 0
-    }
+board.getCellCenter = (cell) => {
+    return new THREE.Vector3(cell.col - 5 + 0.5, 0, cell.row - 4 + 0.5)
 }
 
 board.highlightCell = (row, col, color) => {
@@ -76,10 +69,6 @@ board.unhighligtCell = (row, col) => {
 
     highlightedCell.highlightObj = null;
     highlightedCell.isHighlighted = false
-    // board.cells.splice(
-    //     board.cells.indexOf(highlightedCell),
-    //     1
-    // );
 }
 
 board.switchCellHighlight = (row, col, color) => {
@@ -91,6 +80,39 @@ board.switchCellHighlight = (row, col, color) => {
     }
     board.unhighligtCell(row, col)
     return false;
+}
+
+class MoveObjectRenderCallback extends RenderCallback {
+    constructor(pieceObj, endCoord, interval = 0.05) {
+        super();
+        this.pieceObj = pieceObj;
+        this.startCoord = pieceObj.position;
+        this.endCoord = endCoord;
+        this.interval = interval;
+
+        const diff = this.endCoord.clone().sub(this.startCoord);
+        this.movement = new THREE.Vector3(diff.x * this.interval, diff.y, diff.z * this.interval);
+    }
+
+    draw() {
+        if (this.startCoord.distanceTo(this.endCoord) <= this.interval) {
+            this.pieceObj.position.copy(this.endCoord)
+            this.isDrawn = true;
+            return;
+        }
+        this.pieceObj.position.add(this.movement)
+    }
+}
+
+board.movePiece = (startCell, endCell) => {
+    if (startCell.piece == null || endCell.piece != null) {
+        return;
+    }
+    const endCoord = board.getCellCenter(endCell);
+    const renderCallback = new MoveObjectRenderCallback(startCell.piece, endCoord, 0.05);
+    board.addRenderCallback(renderCallback);
+    endCell.piece = startCell.piece;
+    startCell.piece = null;
 }
 
 // for testing purposes only
