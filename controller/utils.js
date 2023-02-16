@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import {board} from "board";
-import {camera} from "scene";
+import {board} from "../ui/board.js";
+import {camera} from "../ui/scene.js";
 
 const raycaster = new THREE.Raycaster();
 

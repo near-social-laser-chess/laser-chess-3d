@@ -1,7 +1,7 @@
-import {camera, animate, renderer} from "scene";
-import {board} from "board";
-import {calculateClickedPoint} from "utils";
-import {spawnPiece, pieceModels} from "spawn";
+import {camera, animate, renderer} from "./ui/scene.js";
+import {board} from "./ui/board.js";
+import {calculateClickedPoint} from "./controller/utils.js";
+import {spawnPiece, pieceModels} from "./ui/spawn.js";
 
 board.drawCells();
 let currentCell = board.findCell(3, 4);

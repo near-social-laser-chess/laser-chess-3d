@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {boardObj, scene, RenderCallback} from "scene";
+import {boardObj, scene, RenderCallback} from "./scene.js";
 
 export const board = boardObj;
 
