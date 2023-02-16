@@ -71,6 +71,13 @@ board.unhighligtCell = (row, col) => {
     highlightedCell.isHighlighted = false
 }
 
+board.unhighlightAllCells = () => {
+    for (let cell of board.cells) {
+        if (cell.isHighlighted)
+            board.unhighligtCell(cell.row, cell.col);
+    }
+}
+
 board.switchCellHighlight = (row, col, color) => {
     // returns true if cell was highlighted, otherwise returns false
     // uses color argument when highlighting
