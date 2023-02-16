@@ -1,4 +1,5 @@
-import {camera, animate, renderer} from "./ui/scene.js";
+import {camera, animate, renderer, rotateButtonClockwise,
+    rotateButtonCounterClockwise, disableRotateButtons, enableRotateButtons} from "./ui/scene.js";
 import {board} from "./ui/board.js";
 import {calculateClickedPoint} from "./controller/utils.js";
 import {spawnPiece, pieceModels} from "./ui/spawn.js";
@@ -44,8 +45,6 @@ document.addEventListener('resize', (e) => {
     renderer.setSize( window.innerWidth, window.innerHeight );
 });
 
-const rotateButtonCounterClockwise = document.querySelector("button[aria-label='rotate piece left']");
-const rotateButtonClockwise = document.querySelector("button[aria-label='rotate piece right']");
 
 rotateButtonCounterClockwise.addEventListener('click', () => {
     board.rotatePiece(currentCell, -90);
@@ -54,3 +53,5 @@ rotateButtonCounterClockwise.addEventListener('click', () => {
 rotateButtonClockwise.addEventListener('click', () => {
     board.rotatePiece(currentCell, 90);
 });
+
+disableRotateButtons();

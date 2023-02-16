@@ -5,6 +5,20 @@ import {OrbitControls} from 'OrbitControls';
 const request = await fetch('/assets/scene.json');
 const sceneJsonString = await request.json();
 
+
+export const rotateButtonCounterClockwise = document.querySelector("button[aria-label='rotate piece left']");
+export const rotateButtonClockwise = document.querySelector("button[aria-label='rotate piece right']");
+
+export const enableRotateButtons = () => {
+    rotateButtonCounterClockwise.removeAttribute("disabled");
+    rotateButtonClockwise.removeAttribute("disabled");
+}
+
+export const disableRotateButtons = () => {
+    rotateButtonCounterClockwise.setAttribute("disabled", "");
+    rotateButtonClockwise.setAttribute("disabled", "");
+}
+
 export class RenderCallback {
     isDrawn = false;
 
