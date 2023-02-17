@@ -1,31 +1,20 @@
 import {camera, animate, renderer, rotateButtonClockwise,
-    rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
+    rotateButtonCounterClockwise} from "./ui/scene.js";
 import {board} from "./ui/board.js";
 import {calculateClickedPoint} from "./controller/utils.js";
-import {spawnPiece, pieceModels} from "./ui/spawn.js";
+import {spawnPieceOnCell} from "./ui/spawn.js";
 
 board.drawCells();
 let currentCell = board.findCell(3, 4);
-spawnPiece("yellowDeflector", 3, 4)
+const secondCell = board.findCell(4, 5);
+spawnPieceOnCell(currentCell, "redKing")
+spawnPieceOnCell(secondCell, "yellowDeflector")
 animate();
-let index = 0;
 
 document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
     if (point) {
         const cell = board.getCellByCoords(...point.uv);
-        // board.switchCellHighlight(cell.row, cell.col);
-        // if (index === Object.keys(pieceModels).length)
-        //     index = 0;
-        // let i = 0;
-        // for (let name in pieceModels) {
-        //     if (i === index) {
-        //         spawnPiece(name, cell.row, cell.col, 0);
-        //         index++;
-        //         break;
-        //     }
-        //     i++;
-        // }
         board.movePiece(currentCell, cell);
         currentCell = cell;
     }
@@ -53,5 +42,3 @@ rotateButtonCounterClockwise.addEventListener('click', () => {
 rotateButtonClockwise.addEventListener('click', () => {
     board.rotatePiece(currentCell, 90);
 });
-
-disableRotateButtons();

@@ -47,13 +47,12 @@ export const pieceModels = {
     }
 };
 
-export const spawnPiece = (pieceName, row, col, degree= 0) => {
+export const spawnPieceOnCell = (cell, pieceName, degree= 0) => {
     /*
     pieceName - name of piece in pieceModels
     degree - rotation is clockwise
     */
     const pieceData = pieceModels[pieceName];
-    const cell = board.findCell(row, col);
     const mtlLoader = new MTLLoader();
     const objLoader = new OBJLoader();
     mtlLoader.load(pieceData.texture, (mtl) => {
@@ -73,4 +72,13 @@ export const spawnPiece = (pieceName, row, col, degree= 0) => {
             scene.add(cell.piece);
         });
     });
+}
+
+export const spawnPiece = (pieceName, row, col, degree= 0) => {
+    /*
+    pieceName - name of piece in pieceModels
+    degree - rotation is clockwise
+    */
+    const cell = board.findCell(row, col);
+    spawnPieceOnCell(cell, pieceName, degree);
 }

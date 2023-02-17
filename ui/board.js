@@ -159,6 +159,89 @@ board.rotatePiece = (cell, angle) => {
     board.addRenderCallback(renderCallback);
 }
 
+class SwapPiecesRenderCallback extends RenderCallback {
+    // Firsty pieceObj1 is moved up on it's height, then it is moved to the position of pieceObj2,
+    // then pieceObj2 is moved on starting position of pieceObj1 and finally pieceObj1 moved down on it's height
+    State = {
+        FirstPieceUp: "firstPieceUp",
+        FirstPieceMove: "firstPieceMove",
+        SecondPieceMove: "secondPieceMove",
+        FirstPieceDown: "secondPieceDown",
+    }
+
+    constructor(pieceObj1, pieceObj2, interval = 0.05) {
+        super();
+        this.pieceObj1 = pieceObj1;
+        this.pieceObj2 = pieceObj2;
+        this.interval = interval;
+        this.state = this.State.FirstPieceUp;
+
+        this.firstPieceUpEndCoord = new THREE.Vector3(this.pieceObj1.position.x, 1, this.pieceObj1.position.z);
+        this.firstPieceMoveEndCoord = new THREE.Vector3(
+            this.pieceObj2.position.x,
+            this.firstPieceUpEndCoord.y,
+            this.pieceObj2.position.z);
+        this.secondPieceMoveEndCoord = this.pieceObj1.position.clone();
+        this.firstPieceDownEndCoord = this.pieceObj2.position.clone();
+
+        // calculate movement vectors
+        this.firstPieceUpMovement = new THREE.Vector3(0, interval, 0);
+        let diff = this.pieceObj2.position.clone().sub(this.pieceObj1.position);
+        this.firstPieceMoveMovement = new THREE.Vector3(diff.x * this.interval, 0, diff.z * this.interval);
+        diff = this.pieceObj1.position.clone().sub(this.pieceObj2.position);
+        this.secondPieceMoveMovement = new THREE.Vector3(diff.x * this.interval, 0, diff.z * this.interval);
+        this.firstPieceDownMovement = new THREE.Vector3(0, -interval, 0);
+    }
+
+    draw() {
+        switch (this.state) {
+            case this.State.FirstPieceUp:
+                if (this.pieceObj1.position.y >= this.firstPieceUpEndCoord.y) {
+                    this.pieceObj1.position.copy(this.firstPieceUpEndCoord);
+                    this.state = this.State.FirstPieceMove;
+                } else {
+                    this.pieceObj1.position.add(this.firstPieceUpMovement);
+                }
+                break;
+            case this.State.FirstPieceMove:
+                if (this.pieceObj1.position.distanceTo(this.firstPieceMoveEndCoord) <= this.interval) {
+                    this.pieceObj1.position.copy(this.firstPieceMoveEndCoord);
+                    this.state = this.State.SecondPieceMove;
+                } else {
+                    this.pieceObj1.position.add(this.firstPieceMoveMovement);
+                }
+                break;
+            case this.State.SecondPieceMove:
+                if (this.pieceObj2.position.distanceTo(this.secondPieceMoveEndCoord) <= this.interval) {
+                    this.pieceObj2.position.copy(this.secondPieceMoveEndCoord);
+                    this.state = this.State.FirstPieceDown;
+                } else {
+                    this.pieceObj2.position.add(this.secondPieceMoveMovement);
+                }
+                break;
+            case this.State.FirstPieceDown:
+                if (this.pieceObj1.position.y <= this.firstPieceDownEndCoord.y) {
+                    this.pieceObj1.position.copy(this.firstPieceDownEndCoord);
+                    this.isDrawn = true;
+                } else {
+                    this.pieceObj1.position.add(this.firstPieceDownMovement);
+                }
+                break;
+        }
+    }
+
+}
+
+board.swapPieces = (cell1, cell2) => {
+    if (cell1.piece == null || cell2.piece == null)
+        return;
+    const renderCallback = new SwapPiecesRenderCallback(cell1.piece, cell2.piece, 0.05);
+    board.addRenderCallback(renderCallback);
+    const temp = cell1.piece;
+    cell1.piece = cell2.piece;
+    cell2.piece = temp;
+}
+
 // for testing purposes only
 board.drawCells = () => {
     const material = new THREE.LineBasicMaterial( { color: 0x000000 } );
