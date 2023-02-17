@@ -16,18 +16,6 @@ document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
     if (point) {
         const cell = board.getCellByCoords(...point.uv);
-        // board.switchCellHighlight(cell.row, cell.col);
-        // if (index === Object.keys(pieceModels).length)
-        //     index = 0;
-        // let i = 0;
-        // for (let name in pieceModels) {
-        //     if (i === index) {
-        //         spawnPiece(name, cell.row, cell.col, 0);
-        //         index++;
-        //         break;
-        //     }
-        //     i++;
-        // }
         board.movePiece(currentCell, cell);
         currentCell = cell;
     }
@@ -55,5 +43,3 @@ rotateButtonCounterClockwise.addEventListener('click', () => {
 rotateButtonClockwise.addEventListener('click', () => {
     board.rotatePiece(currentCell, 90);
 });
-
-//disableRotateButtons();
