@@ -1,19 +1,15 @@
-import {camera, animate, renderer} from "scene";
-import {board} from "board";
-import {calculateClickedPoint} from "utils";
-import {spawnPiece, pieceModels} from "spawn";
-import {GameController} from "gameController"
+import {camera, animate, renderer, rotateButtonClockwise,
+    rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
+import {board} from "./ui/board.js";
+import {calculateClickedPoint} from "./controller/utils.js";
+import {spawnPiece, pieceModels} from "./ui/spawn.js";
 
-let gameController = new GameController();
-/*
 board.drawCells();
 let currentCell = board.findCell(3, 4);
-spawnPiece("redKing", 3, 4)
+spawnPiece("yellowDeflector", 3, 4)
 animate();
 let index = 0;
- */
 
-let currentCell = board.findCell(3, 4);
 document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
     if (point) {
@@ -48,3 +44,14 @@ document.addEventListener('resize', (e) => {
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
 });
+
+
+rotateButtonCounterClockwise.addEventListener('click', () => {
+    board.rotatePiece(currentCell, -90);
+});
+
+rotateButtonClockwise.addEventListener('click', () => {
+    board.rotatePiece(currentCell, 90);
+});
+
+disableRotateButtons();

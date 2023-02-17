@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {boardObj, scene, RenderCallback} from "scene";
+import {boardObj, scene, RenderCallback} from "./scene.js";
 
 export const board = boardObj;
 
@@ -71,6 +71,13 @@ board.unhighligtCell = (row, col) => {
     highlightedCell.isHighlighted = false
 }
 
+board.unhighlightAllCells = () => {
+    for (let cell of board.cells) {
+        if (cell.isHighlighted)
+            board.unhighligtCell(cell.row, cell.col);
+    }
+}
+
 board.switchCellHighlight = (row, col, color) => {
     // returns true if cell was highlighted, otherwise returns false
     // uses color argument when highlighting
@@ -113,6 +120,43 @@ board.movePiece = (startCell, endCell) => {
     board.addRenderCallback(renderCallback);
     endCell.piece = startCell.piece;
     startCell.piece = null;
+}
+
+class RotatePieceRenderCallback extends RenderCallback {
+    constructor(pieceObj, angle, interval = 0.05) {
+        // angle in degrees. negative is counterclockwise, positive is clockwise
+        super();
+        this.pieceObj = pieceObj;
+        angle = angle / 180 * Math.PI * -1;
+        this.angle = angle;
+        this.endAngle = this.pieceObj.rotation.y + angle;
+        if (angle < 0)
+            if (this.pieceObj.rotation.y === 0)
+                this.endAngle = Math.PI * 2 - this.pieceObj.rotation.y + angle;
+            else
+                this.endAngle = this.pieceObj.rotation.y + angle;
+        this.interval = interval;
+        this.movement = angle * this.interval;
+    }
+
+    draw() {
+        if (Math.abs(this.pieceObj.rotation.y - this.endAngle) <= this.interval || Math.abs(Math.PI * 2 + this.pieceObj.rotation.y - this.endAngle) <= this.interval) {
+            this.pieceObj.rotation.y = this.endAngle;
+            this.isDrawn = true;
+            if (this.angle > 0 && this.pieceObj.rotation.y >= Math.PI * 2) {
+                this.pieceObj.rotation.y = 0;
+            }
+            return;
+        }
+        this.pieceObj.rotation.y += this.movement;
+    }
+}
+
+board.rotatePiece = (cell, angle) => {
+    if (cell.piece == null)
+        return;
+    const renderCallback = new RotatePieceRenderCallback(cell.piece, angle, 0.05);
+    board.addRenderCallback(renderCallback);
 }
 
 // for testing purposes only
