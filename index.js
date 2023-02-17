@@ -1,20 +1,22 @@
 import {camera, animate, renderer, rotateButtonClockwise,
-    rotateButtonCounterClockwise} from "./ui/scene.js";
+    rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
 import {board} from "./ui/board.js";
 import {calculateClickedPoint} from "./controller/utils.js";
-import {spawnPieceOnCell} from "./ui/spawn.js";
+import {spawnPiece, pieceModels} from "./ui/spawn.js";
+import {GameController} from "./controller/main.js";
 
-board.drawCells();
-let currentCell = board.findCell(3, 4);
-const secondCell = board.findCell(4, 5);
-spawnPieceOnCell(currentCell, "redKing")
-spawnPieceOnCell(secondCell, "yellowDeflector")
-animate();
+let gameController = new GameController()
+//board.drawCells();
+let currentCell = board.findCell(3, 4)
+//spawnPiece("yellowDeflector", 3, 4)
+//animate();
+let index = 0;
 
 document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
     if (point) {
         const cell = board.getCellByCoords(...point.uv);
+        gameController.clickOnBoard(cell)
         board.movePiece(currentCell, cell);
         currentCell = cell;
     }

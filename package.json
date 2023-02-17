@@ -2,6 +2,7 @@
   "name": "laser-chess-3d",
   "version": "1.0.0",
   "dependencies": {
+    "lodash": "^4.17.21",
     "three": "^0.149.0"
   }
 }

@@ -1,12 +1,12 @@
-import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums";
-import Board from "./models/Board";
-import AI from "./utils/ai/AI";
+import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums.js";
+import Board from "./models/Board.js";
+import AI from "./utils/ai/AI.js";
 
 const DEFAULT_BOARD_SNS = [
     "l++3d++kd++b+++2/2b7/3B+6/b++1B1ss+1b+++1B+/b+++1B+1S+S1b++1B/6b+++3/7B++2/2B+DKD3L",
 ]
 
-class Game {
+export class Game {
     constructor() {
         this.currentPlayer = PlayerTypesEnum.BLUE
         this.status = GameStatusEnum.PLAYING
@@ -37,7 +37,6 @@ class Game {
 
     applyMovement(movement) {
         this.movementIsLocked = true;
-
         const newBoard = new Board({ squares: this.squares });
 
         newBoard.applyMovement(movement);
@@ -53,6 +52,8 @@ class Game {
         if (this.ai.movement) {
             this.ai.movement = null;
         }
+
+        this.selectedPieceLocation = null;
     }
 
     computeAIMovement() {
@@ -62,10 +63,6 @@ class Game {
         const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
         this.ai.movement = movement.serialize();
         this.movementIsLocked = true;
-    }
-
-    toggleAI() {
-        this.ai.enabled = !this.ai.enabled;
     }
 
     finishMovement() {
@@ -95,12 +92,21 @@ class Game {
     }
 
     selectPiece(location) {
-        this.selectedPieceLocation = location
+        const board = new Board({ squares: this.squares });
+        const piece = board.getSquare(location)
+        if (piece && piece.color === "blue") {
+            this.selectedPieceLocation = location
+        }
     }
 
     getMoveForSelectedPiece() {
+        if (!this.selectedPieceLocation) return;
         const board = new Board({ squares: this.squares });
         return board.getMovesForPieceAtLocation(this.selectedPieceLocation);
+    }
+
+    isPieceSelected() {
+        return !!this.selectedPieceLocation
     }
 
     unselectPiece() {
@@ -113,6 +119,10 @@ class Game {
 
     resume() {
         this.status = GameStatusEnum.PLAYING;
+    }
+
+    toggleAI() {
+        this.ai.enabled = !this.ai.enabled;
     }
 }
 

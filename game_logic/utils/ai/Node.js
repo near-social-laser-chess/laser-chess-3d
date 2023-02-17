@@ -1,6 +1,5 @@
-import { maxBy, minBy } from "lodash";
-import { PlayerTypesEnum } from "../../models/Enums";
-import Board from "../../models/Board";
+import lodash from "https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm"
+import { PlayerTypesEnum } from "../../models/Enums.js";
 
 class Node {
     /**
@@ -102,19 +101,19 @@ class Node {
             if (this.player === player) {
                 if (player === PlayerTypesEnum.BLUE) {
                     // Blue player, maximizes
-                    this.score = maxBy(this.children, (childNode) => childNode.score).score + bias;
+                    this.score = lodash.maxBy(this.children, (childNode) => childNode.score).score + bias;
                 } else {
                     // Red player, minimizes
-                    this.score = minBy(this.children, (childNode) => childNode.score).score - bias;
+                    this.score = lodash.minBy(this.children, (childNode) => childNode.score).score - bias;
                 }
 
             } else {
                 if (player === PlayerTypesEnum.RED) {
                     // Red player, maximizes
-                    this.score = maxBy(this.children, (childNode) => childNode.score).score + bias;
+                    this.score = lodash.maxBy(this.children, (childNode) => childNode.score).score + bias;
                 } else {
                     // Blue player, minimizes
-                    this.score = minBy(this.children, (childNode) => childNode.score).score - bias;
+                    this.score = lodash.minBy(this.children, (childNode) => childNode.score).score - bias;
                 }
             }
         }
@@ -142,9 +141,9 @@ class Node {
             let nodeWithHighestScore;
 
             if (player === PlayerTypesEnum.BLUE) {
-                nodeWithHighestScore = maxBy(this.children, (childNode) => childNode.score);
+                nodeWithHighestScore = lodash.maxBy(this.children, (childNode) => childNode.score);
             } else {
-                nodeWithHighestScore = minBy(this.children, (childNode) => childNode.score);
+                nodeWithHighestScore = lodash.minBy(this.children, (childNode) => childNode.score);
             }
             return nodeWithHighestScore.getMinimumLeaf(player);
 
@@ -153,9 +152,9 @@ class Node {
             let nodeWithLowestScore;
 
             if (player === PlayerTypesEnum.BLUE) {
-                nodeWithLowestScore = minBy(this.children, (childNode) => childNode.score);
+                nodeWithLowestScore = lodash.minBy(this.children, (childNode) => childNode.score);
             } else {
-                nodeWithLowestScore = maxBy(this.children, (childNode) => childNode.score);
+                nodeWithLowestScore = lodash.maxBy(this.children, (childNode) => childNode.score);
             }
             return nodeWithLowestScore.getMinimumLeaf(player);
         }

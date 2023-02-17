@@ -52,6 +52,7 @@ export const spawnPieceOnCell = (cell, pieceName, degree= 0) => {
     pieceName - name of piece in pieceModels
     degree - rotation is clockwise
     */
+    console.log(pieceName)
     const pieceData = pieceModels[pieceName];
     const mtlLoader = new MTLLoader();
     const objLoader = new OBJLoader();

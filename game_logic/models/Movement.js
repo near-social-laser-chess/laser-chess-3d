@@ -1,7 +1,5 @@
-import Location from "./Location";
-import { MovementTypesEnum, RotationTypesEnum } from "./Enums";
-import { toPlainObject } from "lodash";
-
+import Location from "./Location.js";
+import { MovementTypesEnum, RotationTypesEnum } from "./Enums.js";
 
 class Movement {
     /**
