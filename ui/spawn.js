@@ -82,3 +82,22 @@ export const spawnPiece = (pieceName, row, col, degree= 0) => {
     const cell = board.findCell(row, col);
     spawnPieceOnCell(cell, pieceName, degree);
 }
+
+export const removePiece = (cell) => {
+    /*
+    removes piece from scene at all
+    */
+    if (cell.piece == null) {
+        return;
+    }
+    scene.remove(cell.piece);
+    cell.piece = null;
+}
+
+export const removePieceByRowCol = (row, col) => {
+    /*
+    removes piece from scene at all
+    */
+    const cell = board.findCell(row, col);
+    removePiece(cell);
+}
