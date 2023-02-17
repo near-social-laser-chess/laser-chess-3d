@@ -57,6 +57,7 @@ boardObj.addRenderCallback = (renderCallback) => {
 }
 
 export const renderer = new THREE.WebGLRenderer();
+renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
