@@ -69,7 +69,12 @@ export const spawnPieceOnCell = (cell, pieceName, degree= 0) => {
             cell.piece.position.z = center.z;
             cell.piece.position.y = 0;
             cell.piece.scale.set(5, 5, 5);
-            cell.piece.rotateY(Math.PI / 180 * -degree); // here we use -degree to rotate clockwise
+            // make the rotation in range [0, 2PI]
+            let rotation = Math.PI / 180 * -(degree % 360);
+            if (rotation < 0) {
+                rotation += Math.PI * 2;
+            }
+            cell.piece.rotation.y = rotation; // here we use -degree to rotate clockwise
             scene.add(cell.piece);
         });
     });
