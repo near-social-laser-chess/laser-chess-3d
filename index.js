@@ -3,11 +3,13 @@ import {camera, animate, renderer, rotateButtonClockwise,
 import {board} from "./ui/board.js";
 import {calculateClickedPoint} from "./controller/utils.js";
 import {spawnPiece, pieceModels} from "./ui/spawn.js";
+import {GameController} from "./controller/main.js";
 
-board.drawCells();
-let currentCell = board.findCell(3, 4);
-spawnPiece("yellowDeflector", 3, 4)
-animate();
+let gameController = new GameController()
+//board.drawCells();
+let currentCell = board.findCell(3, 4)
+//spawnPiece("yellowDeflector", 3, 4)
+//animate();
 let index = 0;
 
 document.addEventListener( 'mouseup', (e) => {
@@ -54,4 +56,4 @@ rotateButtonClockwise.addEventListener('click', () => {
     board.rotatePiece(currentCell, 90);
 });
 
-disableRotateButtons();
+//disableRotateButtons();

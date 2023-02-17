@@ -1,5 +1,5 @@
-import { PieceTypesEnum, PlayerTypesEnum } from "./Enums";
-import { isLowerCase } from "../utils/Utils";
+import { PieceTypesEnum, PlayerTypesEnum } from "./Enums.js";
+import { isLowerCase } from "../utils/Utils.js";
 
 class Piece {
     /**

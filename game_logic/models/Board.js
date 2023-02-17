@@ -1,15 +1,12 @@
-import { LaserDirectionsEnum, PlayerTypesEnum, MovementTypesEnum, LaserActionTypesEnum, PieceTypesEnum, LaserEventsEnum, SquareTypesEnum } from "./Enums";
-import Location from "./Location";
-import { PieceUtils } from "./Piece";
-import { SquareUtils } from "./Square";
-import SN from "../utils/SN";
-import LHAN from "../utils/LHAN";
-import { flatMap, toLower, toUpper } from "lodash";
-import Movement from "./Movement";
-import LaserPath from "./LaserPath";
-import { point, polygon } from "@turf/helpers";
-import isPointInPolygon from "@turf/boolean-point-in-polygon";
-import { pieceAnimDuration, pieceAnimEasing } from "../components/BoardPiece";
+import { LaserDirectionsEnum, PlayerTypesEnum, MovementTypesEnum, LaserActionTypesEnum, PieceTypesEnum, LaserEventsEnum, SquareTypesEnum } from "./Enums.js";
+import Location from "./Location.js";
+import { PieceUtils } from "./Piece.js";
+import { SquareUtils } from "./Square.js";
+import SN from "../utils/SN.js";
+import LHAN from "../utils/LHAN.js";
+import lodash from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm'
+import Movement from "./Movement.js";
+import LaserPath from "./LaserPath.js";
 
 
 /**
@@ -91,7 +88,7 @@ class Board {
     getPlayerSquares(player) {
         // flatten all rows into a single array
         // console.log(board);
-        const flattenedSquares = flatMap(this.squares);
+        const flattenedSquares = lodash.flatMap(this.squares);
         return flattenedSquares.filter((square) => {
             // Filter out the squares with no pieces in it.
             // And only return the pieces of the specified color
@@ -472,11 +469,11 @@ class Board {
                     // type?
                     if (square.piece.color === PlayerTypesEnum.BLUE) {
                         // Blue uses upper case letters for piece type representation (L D B K S)
-                        sn += toUpper(square.piece.type);
+                        sn += lodash.toUpper(square.piece.type);
 
                     } else {
                         // Red uses lower case letter for piece type representation (l d b k s);
-                        sn += toLower(square.piece.type);
+                        sn += lodash.toLower(square.piece.type);
                     }
 
                     // orientation?
@@ -536,11 +533,11 @@ class Board {
                     // type?
                     if (square.piece.color === PlayerTypesEnum.BLUE) {
                         // Blue uses upper case letters for piece type representation (L D B K S)
-                        sn += toUpper(square.piece.type);
+                        sn += lodash.toUpper(square.piece.type);
 
                     } else {
                         // Red uses lower case letter for piece type representation (l d b k s);
-                        sn += toLower(square.piece.type);
+                        sn += lodash.toLower(square.piece.type);
                     }
 
                     sn += " ";
@@ -561,59 +558,6 @@ class Board {
         });
         console.log(sn);
     }
-
-
-    /**
-     * Check if a piece a srcLocation is moving to a neighboring location.
-     * Uses the point-in-polygon concept.
-     * 
-     * @param {Location} srcLocation the source location
-     * @param {Location} destLocation the destination location
-     * @returns {boolean} true if the destLocation square is a neighboring square, otherwise false for every other square.
-     */
-    static isMovingToNeighborSquare(srcLocation, destLocation) {
-        /**
-         * Minimum squares to be moved to, given xy as srcLocation
-         * 
-         * -x-y | x-y | +x-y
-         *  -xy | xy  | +xy
-         * -x+y | x+y | +x+y
-         */
-        const srcX = srcLocation.colIndex;
-        const srcY = srcLocation.rowIndex;
-        const destX = destLocation.colIndex;
-        const destY = destLocation.rowIndex;
-
-        /**
-         * A polygon containing the possible moving squares for the srcLocation.
-         * That is, the neighbouring squares.
-         * 
-         *
-         * -----------
-         * |a| | | |d|
-         * -----------
-         * | | |x| | |
-         * -----------
-         * |b| | | |c|
-         * -----------
-         * Where X is our srcLocation.
-         * 
-         * @see https://github.com/kishannareshpal/laserchess/blob/master/docs/Guide.md#How-to-play-steps
-         */
-        const possiblePoly = polygon([[
-            [srcX - 1, srcY - 1], // a
-            [srcX - 1, srcY + 1], // b
-            [srcX + 1, srcY + 1], // c
-            [srcX + 1, srcY - 1], // d
-            [srcX - 1, srcY - 1] // closing point – back to a
-        ]]);
-
-        // Check if the destLocation is one of the neighboring squares of the srcLocation
-        const destPoint = point([destX, destY]); // x
-        return isPointInPolygon(destPoint, possiblePoly);
-    }
-
-
 
     /**
      * Get flattened xy points from the laser route, that is used in the board's laser drawing.
@@ -680,67 +624,7 @@ class Board {
             return [x, y];
         });
 
-        return flatMap(points);
-    }
-
-
-
-    /**
-     * Simply presents a piece movement visually on the canvas stage.
-     * 
-     * @param {Ref} stagePiecesRef React.Ref of the layer where the board pieces are drawn in the canvas
-     * @param {Movement} movement The movement being performed
-     * @param {number} cellSize The width of individual squares of the board
-     */
-    static presentPieceMovement(stagePiecesRef, movement, cellSize) {
-        const [srcBoardPiece] = stagePiecesRef.current.find(`#${movement.srcLocation.an}`);
-
-        // Check the type of movement, which could be either "special" or "normal"
-        if (movement.type === MovementTypesEnum.SPECIAL) {
-            const [destBoardPiece] = stagePiecesRef.current.find(`#${movement.destLocation.an}`);
-            // Special move (Switch can swap)
-            // Swap the piece from destLocation with the piece at srcLocation!
-            // - First move the piece from src to dest
-            srcBoardPiece.to({
-                x: Location.getX(movement.destLocation.colIndex, cellSize),
-                y: Location.getY(movement.destLocation.rowIndex, cellSize),
-                duration: pieceAnimDuration,
-                easing: pieceAnimEasing
-            });
-            // - Now move the piece from src to dest
-            destBoardPiece.to({
-                x: Location.getX(movement.srcLocation.colIndex, cellSize),
-                y: Location.getY(movement.srcLocation.rowIndex, cellSize),
-                duration: pieceAnimDuration,
-                easing: pieceAnimEasing
-            });
-
-        } else if (movement.type === MovementTypesEnum.NORMAL) {
-            // Normal move (moving to a new empty target square)
-            // - Just put the piece from src in dest square
-            srcBoardPiece.to({
-                x: Location.getX(movement.destLocation.colIndex, cellSize),
-                y: Location.getY(movement.destLocation.rowIndex, cellSize),
-                duration: pieceAnimDuration,
-                easing: pieceAnimEasing
-            });
-
-        } else if (movement.type === MovementTypesEnum.ROTATION_CLOCKWISE) {
-            const prevOrientation = srcBoardPiece.rotation();
-            srcBoardPiece.to({
-                rotation: prevOrientation + 90,
-                duration: pieceAnimDuration,
-                easing: pieceAnimEasing
-            });
-
-        } else if (movement.type === MovementTypesEnum.ROTATION_C_CLOCKWISE) {
-            const prevOrientation = srcBoardPiece.rotation();
-            srcBoardPiece.to({
-                rotation: prevOrientation - 90,
-                duration: pieceAnimDuration,
-                easing: pieceAnimEasing
-            });
-        }
+        return lodash.flatMap(points);
     }
 }
 

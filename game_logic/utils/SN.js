@@ -1,9 +1,8 @@
-import { isString, isEmpty, reduce } from "lodash";
-import { isLowerCase } from "./Utils";
-import Square from "../models/Square";
-import Location from "../models/Location";
-import Piece from "../models/Piece";
-import { PlayerTypesEnum, SquareTypesEnum } from "../models/Enums";
+import lodash from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm'
+import Square from "../models/Square.js";
+import Location from "../models/Location.js";
+import Piece from "../models/Piece.js";
+import { PlayerTypesEnum, SquareTypesEnum } from "../models/Enums.js";
 
 
 // const boardGridNotationText = "lR6rR/r8R/r8R/r8R/r8R/r8R/r8R/rR6rL";
@@ -52,7 +51,7 @@ class SN {
      * @throws Invalid Notation if notation is invalid, and the throwOnInvalid param is set to true.
      */
     static validate(notationText, throwOnInvalid = false) {
-        if (!isString(notationText)) {
+        if (!lodash.isString(notationText)) {
             if (throwOnInvalid) {
                 throw "Invalid notation – Must be string";
             }
@@ -148,13 +147,13 @@ class SN {
                 let squareType = SquareTypesEnum.NORMAL; // represents the square type in this location
 
                 // Check if we need a piece on this square
-                if (!isEmpty(col)) {
+                if (!lodash.isEmpty(col)) {
                     // Find out which piece we need.
                     const pieceType = col[0]; // type (Kk, Ll, Bb, Dd, Ss)
                     let orientation = 0; // orientation in 90deg increments (0, 90, 180, 270)
                     if (col.indexOf("+") != -1) {
                         const rotations = col.substring(1);
-                        orientation = reduce(rotations, (prev) => {
+                        orientation = lodash.reduce(rotations, (prev) => {
                             return prev + 90;
                         }, 0);
                     }

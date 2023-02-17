@@ -1,6 +1,6 @@
-import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums";
-import Board from "./models/Board";
-import AI from "./utils/ai/AI";
+import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums.js";
+import Board from "./models/Board.js";
+import AI from "./utils/ai/AI.js";
 
 const DEFAULT_BOARD_SNS = [
     "l++3d++kd++b+++2/2b7/3B+6/b++1B1ss+1b+++1B+/b+++1B+1S+S1b++1B/6b+++3/7B++2/2B+DKD3L",

@@ -16,8 +16,25 @@ export const calculateClickedPoint = (event) => {
 }
 
 export const getPieceName = (type, color) => {
-    if (color === "blue") color = "red"
-    let upperType = type[0].toUpperCase() + type.slice(1); // king => King
+    if (color === "blue") color = "yellow"
 
-    return color + upperType // redKing
+    switch (type) {
+        case "l":
+            type = "Laser";
+            break;
+        case "k":
+            type = "King";
+            break;
+        case "b":
+            type = "Deflector";
+            break;
+        case "d":
+            type = "Defender";
+            break;
+        case "s":
+            type = "Switch";
+            break;
+    }
+
+    return color + type // redKing
 }

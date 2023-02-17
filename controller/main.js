@@ -1,6 +1,8 @@
-import {Game} from 'gameLogic'
-import {board} from "uiBoard";
-import {getPieceName} from "utils";
+import {Game} from '../game_logic/main.js'
+import {board} from "../ui/board.js";
+import {animate} from "../ui/scene.js";
+import {getPieceName} from "./utils.js";
+import {spawnPiece} from "../ui/spawn.js";
 
 export class GameController {
     constructor(board) {
@@ -12,15 +14,23 @@ export class GameController {
 
     spawnAllFigures() {
         board.drawCells();
+
         for (let i = 0; i < this.game.squares.length; i++) {
             let square = this.game.squares[i]
-            let colIndex = square.location.colIndex
-            let rowIndex = square.location.rowIndex
-            let pieceType = square.location.piece.type
-            let pieceColor = square.location.piece.color
-            let name = getPieceName(pieceType, pieceColor)
-            board.spawn(rowIndex, colIndex, name)
-            animate();
+            for (let j = 0; j < square.length; j++) {
+                let cell = square[j]
+                let colIndex = cell.location.colIndex
+                let rowIndex = cell.location.rowIndex
+                if (!cell.piece) continue
+                let pieceType = cell.piece.type
+                let pieceColor = cell.piece.color
+                let name = getPieceName(pieceType, pieceColor)
+
+                spawnPiece(name, rowIndex, colIndex, cell.piece.orientation)
+            }
+
         }
+
+        animate();
     }
 }
