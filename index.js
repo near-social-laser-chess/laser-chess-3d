@@ -2,13 +2,18 @@ import {camera, animate, renderer} from "scene";
 import {board} from "board";
 import {calculateClickedPoint} from "utils";
 import {spawnPiece, pieceModels} from "spawn";
+import {GameController} from "gameController"
 
+let gameController = new GameController();
+/*
 board.drawCells();
 let currentCell = board.findCell(3, 4);
 spawnPiece("redKing", 3, 4)
 animate();
 let index = 0;
+ */
 
+let currentCell = board.findCell(3, 4);
 document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
     if (point) {

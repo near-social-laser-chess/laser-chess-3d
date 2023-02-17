@@ -14,3 +14,10 @@ export const calculateClickedPoint = (event) => {
         return intersects[0];
     }
 }
+
+export const getPieceName = (type, color) => {
+    if (color === "blue") color = "red"
+    let upperType = type[0].toUpperCase() + type.slice(1); // king => King
+
+    return color + upperType // redKing
+}

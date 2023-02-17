@@ -52,6 +52,7 @@ export const spawnPiece = (pieceName, row, col, degree= 0) => {
     pieceName - name of piece in pieceModels
     degree - rotation is clockwise
     */
+    console.log(pieceName)
     const pieceData = pieceModels[pieceName];
     const cell = board.findCell(row, col);
     const mtlLoader = new MTLLoader();
