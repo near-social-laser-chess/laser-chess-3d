@@ -2,7 +2,7 @@ name: Build project to static
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
