@@ -60,13 +60,11 @@ const laserPath = [
 //     board.drawLaser(cellPair.start, cellPair.end)
 // }
 
-document.addEventListener( 'mouseup', (e) => {
+document.addEventListener( 'mouseup', async (e) => {
     const point = calculateClickedPoint(e);
     if (point) {
         const cell = board.getCellByCoords(...point.uv);
-        gameController.clickOnBoard(cell)
-        board.movePiece(currentCell, cell);
-        currentCell = cell;
+        await gameController.clickOnBoard(cell)
     }
 });
 

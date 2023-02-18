@@ -35,6 +35,10 @@ export class Game {
         this.sn = newBoard.sn;
    }
 
+   getLaser() {
+        return this.laser;
+   }
+
     applyMovement(movement) {
         this.movementIsLocked = true;
         const newBoard = new Board({ squares: this.squares });
@@ -63,6 +67,8 @@ export class Game {
         const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
         this.ai.movement = movement.serialize();
         this.movementIsLocked = true;
+
+        return this.ai.movement;
     }
 
     finishMovement() {
@@ -93,14 +99,19 @@ export class Game {
 
     selectPiece(location) {
         const board = new Board({ squares: this.squares });
-        const piece = board.getSquare(location)
-        if (piece && piece.color === "blue") {
+        const square = board.getSquare(location)
+        if (square && square.piece && square.piece.color === "blue") {
             this.selectedPieceLocation = location
+            return true;
         }
+
+        return false;
     }
 
     getMoveForSelectedPiece() {
-        if (!this.selectedPieceLocation) return;
+        if (!this.isPieceSelected()){
+            return;
+        }
         const board = new Board({ squares: this.squares });
         return board.getMovesForPieceAtLocation(this.selectedPieceLocation);
     }
@@ -109,8 +120,16 @@ export class Game {
         return !!this.selectedPieceLocation
     }
 
-    unselectPiece() {
+    unselectPiece(location) {
+        if (!this.isPieceSelected()) return false;
+
+        if (location.rowIndex !== this.selectedPieceLocation.rowIndex ||
+            location.colIndex !== this.selectedPieceLocation.colIndex) {
+            return false;
+        }
+
         this.selectedPieceLocation = null
+        return true;
     }
 
     pause () {

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {boardObj, scene} from "./scene.js";
 import {SwapPiecesRenderCallback, RotatePieceRenderCallback, MoveObjectRenderCallback,
         KillPieceRenderCallback} from "./RenderCallbacks.js";
+import {Color} from "three";
 
 export const board = boardObj;
 const PIECE_CENTER_Y = 0.438;
@@ -52,11 +53,12 @@ board.highlightCell = (row, col, color) => {
         return;
     if (color == null)
         color = 0x00ff00;
+
     const geometry = new THREE.PlaneGeometry( 1, 1 );
     const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.FrontSide} );
     const plane = new THREE.Mesh( geometry, material );
 
-    const center = board.getCellCenter(row, col);
+    const center = board.getCellCenter({row, col});
     plane.position.x = center.x;
     plane.position.z = center.z;
     plane.position.y = 0.001;
