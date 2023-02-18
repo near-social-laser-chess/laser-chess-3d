@@ -31,6 +31,9 @@ board.getCellByCoords = (x, y) => {
 }
 
 board.findCell = (row, col) => {
+    if (row < 0 || row > 7 || col < 0 || col > 9) {
+        throw new Error(`Invalid cell coordinates row=${row}, col=${col}`);
+    }
     return board.cells.find((obj) => obj.row === row && obj.col === col);
 }
 
