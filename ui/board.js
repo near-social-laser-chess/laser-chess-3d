@@ -11,6 +11,7 @@ const initCells = () => {
             board.cells.push({
                 row: row,
                 col: col,
+                isBorder: row === 0 || row === 7 || col === 0 || col === 9,
                 isHighlighted: false,
                 highlightObj: null,
                 piece: null
@@ -90,8 +91,9 @@ board.switchCellHighlight = (row, col, color) => {
 }
 
 class MoveObjectRenderCallback extends RenderCallback {
-    constructor(pieceObj, endCoord, interval = 0.05) {
+    constructor(pieceObj, endCoord, interval = 0.05, callback = null) {
         super();
+        this.callback = callback;
         this.pieceObj = pieceObj;
         this.startCoord = pieceObj.position;
         this.endCoord = endCoord;
@@ -105,6 +107,8 @@ class MoveObjectRenderCallback extends RenderCallback {
         if (this.startCoord.distanceTo(this.endCoord) <= this.interval) {
             this.pieceObj.position.copy(this.endCoord)
             this.isDrawn = true;
+            if (this.callback != null)
+                this.callback();
             return;
         }
         this.pieceObj.position.add(this.movement)
@@ -115,17 +119,24 @@ board.movePiece = (startCell, endCell) => {
     if (startCell.piece == null || endCell.piece != null) {
         return;
     }
-    const endCoord = board.getCellCenter(endCell);
-    const renderCallback = new MoveObjectRenderCallback(startCell.piece, endCoord, 0.05);
-    board.addRenderCallback(renderCallback);
-    endCell.piece = startCell.piece;
-    startCell.piece = null;
+    return new Promise((resolve, reject) => {
+        const endCoord = board.getCellCenter(endCell);
+        const callback = () => {
+            const pieceObj = startCell.piece;
+            startCell.piece = null;
+            endCell.piece = pieceObj;
+            resolve();
+        }
+        const renderCallback = new MoveObjectRenderCallback(startCell.piece, endCoord, 0.05, callback);
+        board.addRenderCallback(renderCallback);
+    });
 }
 
 class RotatePieceRenderCallback extends RenderCallback {
-    constructor(pieceObj, angle, interval = 0.05) {
+    constructor(pieceObj, angle, interval = 0.05, callback = null) {
         // angle in degrees. negative is counterclockwise, positive is clockwise
         super();
+        this.callback = callback;
         this.pieceObj = pieceObj;
         angle = angle / 180 * Math.PI * -1;
         this.angle = angle;
@@ -143,6 +154,8 @@ class RotatePieceRenderCallback extends RenderCallback {
         if (Math.abs(this.pieceObj.rotation.y - this.endAngle) <= this.interval || Math.abs(Math.PI * 2 + this.pieceObj.rotation.y - this.endAngle) <= this.interval) {
             this.pieceObj.rotation.y = this.endAngle;
             this.isDrawn = true;
+            if (this.callback != null)
+                this.callback();
             if (this.angle > 0 && this.pieceObj.rotation.y >= Math.PI * 2) {
                 this.pieceObj.rotation.y = 0;
             }
@@ -155,8 +168,10 @@ class RotatePieceRenderCallback extends RenderCallback {
 board.rotatePiece = (cell, angle) => {
     if (cell.piece == null)
         return;
-    const renderCallback = new RotatePieceRenderCallback(cell.piece, angle, 0.05);
-    board.addRenderCallback(renderCallback);
+    return new Promise((resolve, reject) => {
+        const renderCallback = new RotatePieceRenderCallback(cell.piece, angle, 0.05, resolve);
+        board.addRenderCallback(renderCallback);
+    });
 }
 
 class SwapPiecesRenderCallback extends RenderCallback {
@@ -169,11 +184,12 @@ class SwapPiecesRenderCallback extends RenderCallback {
         FirstPieceDown: "secondPieceDown",
     }
 
-    constructor(pieceObj1, pieceObj2, interval = 0.05) {
+    constructor(pieceObj1, pieceObj2, interval = 0.05, callback = null) {
         super();
         this.pieceObj1 = pieceObj1;
         this.pieceObj2 = pieceObj2;
         this.interval = interval;
+        this.callback = callback;
         this.state = this.State.FirstPieceUp;
 
         this.firstPieceUpEndCoord = new THREE.Vector3(this.pieceObj1.position.x, 1, this.pieceObj1.position.z);
@@ -223,6 +239,9 @@ class SwapPiecesRenderCallback extends RenderCallback {
                 if (this.pieceObj1.position.y <= this.firstPieceDownEndCoord.y) {
                     this.pieceObj1.position.copy(this.firstPieceDownEndCoord);
                     this.isDrawn = true;
+                    if (this.callback != null) {
+                        this.callback();
+                    }
                 } else {
                     this.pieceObj1.position.add(this.firstPieceDownMovement);
                 }
@@ -235,11 +254,69 @@ class SwapPiecesRenderCallback extends RenderCallback {
 board.swapPieces = (cell1, cell2) => {
     if (cell1.piece == null || cell2.piece == null)
         return;
-    const renderCallback = new SwapPiecesRenderCallback(cell1.piece, cell2.piece, 0.05);
-    board.addRenderCallback(renderCallback);
-    const temp = cell1.piece;
-    cell1.piece = cell2.piece;
-    cell2.piece = temp;
+    return new Promise((resolve, reject) => {
+        const callback = () => {
+            const temp = cell1.piece;
+            cell1.piece = cell2.piece;
+            cell2.piece = temp;
+            resolve();
+        }
+        const renderCallback = new SwapPiecesRenderCallback(cell1.piece, cell2.piece, 0.05, callback);
+        board.addRenderCallback(renderCallback);
+    });
+}
+
+board.drawLaserSegment = (startCoords, endCoords) => {
+    const materialOuter = new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0.5 } );
+    const materialInner = new THREE.LineBasicMaterial( { color: 0xffffff } );
+    const points = [
+        startCoords,
+        endCoords
+    ]
+    points[0].y = 0.48;
+    points[1].y = 0.48;
+
+    const geometryOuter = new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3(points),
+        512,// path segments
+        0.02,// THICKNESS
+        8, //Roundness of Tube
+        false, //closed
+    );
+    const lineOuter = new THREE.Line(geometryOuter, materialOuter);
+    const geometryInner = new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3(points),
+        2048,// path segments
+        0.0195,// THICKNESS
+        8, //Roundness of Tube
+        false //closed
+    );
+    const lineInner = new THREE.Line(geometryInner, materialInner);
+    scene.add(lineOuter);
+    scene.add(lineInner);
+    setTimeout(() => {
+        scene.remove(lineOuter);
+        scene.remove(lineInner);
+    }, 1000);
+}
+
+board.drawLaserPath = (pathSegments) => {
+    for (let cellPairIndex in pathSegments) {
+        const cellPair = pathSegments[cellPairIndex];
+        const points = [
+            board.getCellCenter(cellPair.startCell),
+            board.getCellCenter(cellPair.endCell)
+        ];
+
+        // check if the cellPair.endCell is the border of the board and if so, check if the cellEnd has piece on it
+        // and if not set the point[1] to the border
+        if (cellPairIndex == pathSegments.length - 1 && cellPair.endCell.piece == null && cellPair.endCell.isBorder) {
+            const diff = points[1].clone().sub(points[0]);
+            points[1].add(diff.multiplyScalar(10))
+        }
+
+        board.drawLaserSegment(points[0], points[1])
+    }
 }
 
 // for testing purposes only

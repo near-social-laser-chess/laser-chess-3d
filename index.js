@@ -6,11 +6,58 @@ import {spawnPiece, pieceModels} from "./ui/spawn.js";
 import {GameController} from "./controller/main.js";
 
 let gameController = new GameController()
-//board.drawCells();
 let currentCell = board.findCell(3, 4)
-//spawnPiece("yellowDeflector", 3, 4)
-//animate();
 let index = 0;
+const laserPath = [
+    {
+        startCell: board.findCell(7, 9),
+        endCell: board.findCell(6, 9)
+    },
+    {
+        startCell: board.findCell(6, 9),
+        endCell: board.findCell(5, 9)
+    },
+    {
+        startCell: board.findCell(5, 9),
+        endCell: board.findCell(4, 9)
+    },
+    {
+        startCell: board.findCell(4, 9),
+        endCell: board.findCell(4, 8)
+    },
+    {
+        startCell: board.findCell(4, 8),
+        endCell: board.findCell(4, 7)
+    },
+    {
+        startCell: board.findCell(4, 7),
+        endCell: board.findCell(3, 7)
+    },
+    {
+        startCell: board.findCell(3, 7),
+        endCell: board.findCell(3, 8)
+    },
+    {
+        startCell: board.findCell(3, 8),
+        endCell: board.findCell(3, 9)
+    },
+    {
+        startCell: board.findCell(3, 9),
+        endCell: board.findCell(2, 9)
+    },
+    {
+        startCell: board.findCell(2, 9),
+        endCell: board.findCell(1, 9)
+    },
+    {
+        startCell: board.findCell(1, 9),
+        endCell: board.findCell(0, 9)
+    }
+]
+
+// for (let cellPair of laserPath) {
+//     board.drawLaser(cellPair.start, cellPair.end)
+// }
 
 document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
@@ -41,6 +88,7 @@ rotateButtonCounterClockwise.addEventListener('click', () => {
     board.rotatePiece(currentCell, -90);
 });
 
-rotateButtonClockwise.addEventListener('click', () => {
-    board.rotatePiece(currentCell, 90);
+rotateButtonClockwise.addEventListener('click', async () => {
+    await board.rotatePiece(currentCell, 90);
+    board.drawLaserPath(laserPath);
 });

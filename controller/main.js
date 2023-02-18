@@ -3,7 +3,7 @@ import {board} from "../ui/board.js";
 import {animate} from "../ui/scene.js";
 import {getPieceName} from "./utils.js";
 import {spawnPiece} from "../ui/spawn.js";
-import Location from "../game_logic/models/Location";
+import Location from "../game_logic/models/Location.js";
 
 export class GameController {
     constructor(board) {
