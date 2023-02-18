@@ -90,5 +90,7 @@ rotateButtonCounterClockwise.addEventListener('click', () => {
 
 rotateButtonClockwise.addEventListener('click', async () => {
     await board.rotatePiece(currentCell, 90);
-    board.drawLaserPath(laserPath);
+    await board.swapPieces(currentCell, board.findCell(3, 5));
+    await board.drawLaserPath(laserPath);
+    console.log("done");
 });

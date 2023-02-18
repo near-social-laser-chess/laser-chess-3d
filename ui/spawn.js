@@ -68,7 +68,7 @@ export const spawnPieceOnCell = (cell, pieceName, degree= 0) => {
             cell.piece.position.x = center.x;
             cell.piece.position.z = center.z;
             cell.piece.position.y = 0;
-            cell.piece.scale.set(5, 5, 5);
+            cell.piece.scale.set(4.5, 4.5, 4.5);
             // make the rotation in range [0, 2PI]
             let rotation = Math.PI / 180 * -(degree % 360);
             if (rotation < 0) {
