@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path')
 
 module.exports = (env, argv) => {
@@ -33,6 +34,9 @@ module.exports = (env, argv) => {
                 patterns: [
                     {from: "assets", to: "assets"}
                 ],
+            }),
+            new webpack.DefinePlugin({
+                'BASE_URL': JSON.stringify(process.env.BASE_URL ? process.env.BASE_URL: "")
             }),
             {
                 apply: (compiler) => {

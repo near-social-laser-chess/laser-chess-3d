@@ -6,44 +6,44 @@ import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
 
 export const pieceModels = {
     yellowKing: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}assets/kingY.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/kingY.mtl`
+        model: `${BASE_URL}/assets/kingY.obj`,
+        texture: `${BASE_URL}/assets/kingY.mtl`
     },
     redKing: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/kingR.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/kingR.mtl`
+        model: `${BASE_URL}/assets/kingR.obj`,
+        texture: `${BASE_URL}/assets/kingR.mtl`
     },
     yellowDeflector: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/deflectorY.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/deflectorY.mtl`
+        model: `${BASE_URL}/assets/deflectorY.obj`,
+        texture: `${BASE_URL}/assets/deflectorY.mtl`
     },
     redDeflector: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/deflectorR1.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/deflectorR1.mtl`
+        model: `${BASE_URL}/assets/deflectorR1.obj`,
+        texture: `${BASE_URL}/assets/deflectorR1.mtl`
     },
     yellowDefender: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/DefenderY1.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/DefenderY1.mtl`
+        model: `${BASE_URL}/assets/DefenderY1.obj`,
+        texture: `${BASE_URL}/assets/DefenderY1.mtl`
     },
     redDefender: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/DefenderR1.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/DefenderR1.mtl`
+        model: `${BASE_URL}/assets/DefenderR1.obj`,
+        texture: `${BASE_URL}/assets/DefenderR1.mtl`
     },
     yellowSwitch: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/switchY1.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/switchY1.mtl`
+        model: `${BASE_URL}/assets/switchY1.obj`,
+        texture: `${BASE_URL}/assets/switchY1.mtl`
     },
     redSwitch: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/switchR1.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/switchR1.mtl`
+        model: `${BASE_URL}/assets/switchR1.obj`,
+        texture: `${BASE_URL}/assets/switchR1.mtl`
     },
     yellowLaser: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/laserY.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/laserY.mtl`
+        model: `${BASE_URL}/assets/laserY.obj`,
+        texture: `${BASE_URL}/assets/laserY.mtl`
     },
     redLaser: {
-        model: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/laserR.obj`,
-        texture: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/laserR.mtl`
+        model: `${BASE_URL}/assets/laserR.obj`,
+        texture: `${BASE_URL}/assets/laserR.mtl`
     }
 };
 
