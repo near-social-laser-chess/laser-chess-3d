@@ -17,7 +17,7 @@ jobs:
     - name: yarn install and build
       run: |
         yarn
-        BASE_URL=https://github.com/near-social-laser-chess/laser-chess-3d/build yarn build
+        BASE_URL=https://raw.githubusercontent.com/near-social-laser-chess/laser-chess-3d/build yarn build
 
     - name: Deploy
       uses: s0/git-publish-subdir-action@develop
