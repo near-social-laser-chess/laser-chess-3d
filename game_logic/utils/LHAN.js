@@ -21,9 +21,8 @@ class LHAN {
 
         const request = await fetch(`${BASE_URL}/assets/laser-v-piece.json`);
         const json = await request.json();
-        const objLoader = new THREE.ObjectLoader();
-        const lhan_relations_json = objLoader.parse(json );
-        const hitAction = lhan_relations_json[currentDirection][type][orientation];
+        const hitAction = json[currentDirection][type][orientation];
+
         if (hitAction === "kill" || hitAction === "nothing") {
             return {
                 type: hitAction,

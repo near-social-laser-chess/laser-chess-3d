@@ -29,8 +29,6 @@ export const GameStatusEnum = Object.freeze({
     GAME_OVER: "gameover"
 });
 
-
-
 /**
  * Piece
  */
@@ -40,7 +38,6 @@ export const GameStatusEnum = Object.freeze({
 // });
 
 export const PieceTypesEnum = Object.freeze({
-    KING: "k",
     DEFLECTOR: "b",
     DEFENDER: "d",
     SWITCH: "s",

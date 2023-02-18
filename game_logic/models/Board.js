@@ -144,10 +144,10 @@ class Board {
 
     /**
      * Get the route that the laser will travel when enabled for the specified playerType
-     * 
+     *
      * @param {PlayerTypesEnum} playerType the player who will applying the laser
      */
-    getLaserRoute(playerType) {
+    async getLaserRoute(playerType) {
         const completeRoute = []; // holds the laser path!
 
         // Get the laser of the player on the move
@@ -208,7 +208,7 @@ class Board {
                 // Check if it has a piece in this square
                 if (SquareUtils.hasPiece(nextScanningSquare)) {
                     // If piece was found, check what we have to do, based on the Laser Hit Action Notation of the piece in the scanning square
-                    const action = LHAN.getHitAction(direction, nextScanningSquare.piece);
+                    const action = await LHAN.getHitAction(direction, nextScanningSquare.piece);
                     if (action.type === LaserActionTypesEnum.KILL) {
                         // The piece in this square should be killed/eaten/captured.
                         eventType = LaserEventsEnum.END; // end the scanning, we reached the limit for this laser beam.
@@ -216,7 +216,6 @@ class Board {
                     } else if (action.type === LaserActionTypesEnum.DEFLECT) {
                         // The piece in this square changes the direction of my laser beam.
                         direction = action.newDirection;
-
                     } else if (action.type === LaserActionTypesEnum.NOTHING) {
                         // The piece in this square is probably (1) another laser or (2) a defender
                         // So, do nothing! Stop the laser now.
@@ -414,17 +413,17 @@ class Board {
 
     /**
      * Applies the laser hit action notation in the current board.
-     * 
+     *
      * @param {PlayerTypesEnum} playerType the player whose laser is being switched on.
      * @returns {number[][]} the
      */
-    applyLaser(playerType) {
+    async applyLaser(playerType) {
         if (!playerType) {
             throw new Error("applyLaser - Please specify the player whose laser is being switched on.");
         }
 
         // Compute the laser beam route, and do actions on the necessary pieces.
-        const laserRoute = this.getLaserRoute(playerType);
+        const laserRoute = await this.getLaserRoute(playerType);
         const finalLaserPath = laserRoute[laserRoute.length - 1];
 
         // handle the laser hit
@@ -450,7 +449,7 @@ class Board {
      * @param {PlayerTypesEnum} playerType the player that is moving
      */
     newBoardFromMovement(movement, playerType) {
-        const newBoard = new Board({ setupNotation: this.toSN() }); // clone this board
+        const newBoard = new Board({setupNotation: this.toSN()}); // clone this board
         newBoard.applyMovement(movement);
         newBoard.applyLaser(playerType);
         return newBoard;

@@ -1,4 +1,4 @@
-import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums.js";
+import {GameStatusEnum, PieceTypesEnum, PlayerTypesEnum} from "./models/Enums.js";
 import Board from "./models/Board.js";
 import AI from "./utils/ai/AI.js";
 
@@ -28,6 +28,10 @@ export class Game {
         this.setBoardType()
     }
 
+    getWinner() {
+        return this.winner;
+    }
+
     setBoardType() {
         let newBoard = new Board({}).serialize();
         this.squares = newBoard.squares;
@@ -35,12 +39,16 @@ export class Game {
         this.sn = newBoard.sn;
    }
 
-    applyMovement(movement) {
+   getLaser() {
+        return this.laser;
+   }
+
+    async applyMovement(movement) {
         this.movementIsLocked = true;
-        const newBoard = new Board({ squares: this.squares });
+        const newBoard = new Board({squares: this.squares});
 
         newBoard.applyMovement(movement);
-        const route = newBoard.getLaserRoute(this.currentPlayer);
+        const route = await newBoard.getLaserRoute(this.currentPlayer);
 
         this.laser.triggered = true;
         this.laser.route = route;
@@ -63,6 +71,8 @@ export class Game {
         const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
         this.ai.movement = movement.serialize();
         this.movementIsLocked = true;
+
+        return this.ai.movement;
     }
 
     finishMovement() {
@@ -93,24 +103,53 @@ export class Game {
 
     selectPiece(location) {
         const board = new Board({ squares: this.squares });
-        const piece = board.getSquare(location)
-        if (piece && piece.color === "blue") {
+        const square = board.getSquare(location)
+        if (square && square.piece && square.piece.color === "blue") {
             this.selectedPieceLocation = location
+            return true;
         }
+
+        return false;
     }
 
     getMoveForSelectedPiece() {
-        if (!this.selectedPieceLocation) return;
+        if (!this.isPieceSelected()){
+            return;
+        }
         const board = new Board({ squares: this.squares });
         return board.getMovesForPieceAtLocation(this.selectedPieceLocation);
+    }
+
+    checkPieceType(location, type) {
+        const board = new Board({ squares: this.squares });
+        let square = board.getSquare(location)
+        return square.piece.type === type;
+    }
+
+    getSelectedPiece() {
+        return this.selectedPieceLocation;
     }
 
     isPieceSelected() {
         return !!this.selectedPieceLocation
     }
 
-    unselectPiece() {
+    unselectPiece(location) {
+        if (!this.isPieceSelected()) return false;
+
+        if (location.rowIndex !== this.selectedPieceLocation.rowIndex ||
+            location.colIndex !== this.selectedPieceLocation.colIndex) {
+            return false;
+        }
+
         this.selectedPieceLocation = null
+        return true;
+    }
+
+    getCellOrientation(location) {
+        const board = new Board({ squares: this.squares });
+        let square = board.getSquare(location)
+        return square.piece.orientation;
     }
 
     pause () {
