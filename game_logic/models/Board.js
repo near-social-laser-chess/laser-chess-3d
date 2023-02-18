@@ -1,7 +1,15 @@
-import { LaserDirectionsEnum, PlayerTypesEnum, MovementTypesEnum, LaserActionTypesEnum, PieceTypesEnum, LaserEventsEnum, SquareTypesEnum } from "./Enums.js";
+import {
+    LaserActionTypesEnum,
+    LaserDirectionsEnum,
+    LaserEventsEnum,
+    MovementTypesEnum,
+    PieceTypesEnum,
+    PlayerTypesEnum,
+    SquareTypesEnum
+} from "./Enums.js";
 import Location from "./Location.js";
-import { PieceUtils } from "./Piece.js";
-import { SquareUtils } from "./Square.js";
+import {PieceUtils} from "./Piece.js";
+import {SquareUtils} from "./Square.js";
 import SN from "../utils/SN.js";
 import LHAN from "../utils/LHAN.js";
 import lodash from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm'
@@ -72,8 +80,7 @@ class Board {
     getSquare(location) {
         let row = this.squares[location.rowIndex];
         if (row) {
-            let squareAtLocation = row[location.colIndex];
-            return squareAtLocation;
+            return row[location.colIndex];
         }
         return null;
     }

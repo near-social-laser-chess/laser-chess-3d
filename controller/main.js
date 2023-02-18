@@ -3,6 +3,7 @@ import {board} from "../ui/board.js";
 import {animate} from "../ui/scene.js";
 import {getPieceName} from "./utils.js";
 import {spawnPiece} from "../ui/spawn.js";
+import Location from "../game_logic/models/Location";
 
 export class GameController {
     constructor(board) {
@@ -28,9 +29,26 @@ export class GameController {
 
                 spawnPiece(name, rowIndex, colIndex, cell.piece.orientation)
             }
-
         }
 
         animate();
+    }
+
+    clickOnBoard(cell) {
+        const cellLocation = new Location(cell.col, cell.row)
+
+        if (!this.game.isPieceSelected()) {
+            this.selectPiece(cellLocation)
+        }
+    }
+
+    selectPiece(location) {
+        this.game.selectPiece(location)
+        const moves = this.game.getMoveForSelectedPiece()
+        if (moves.length === 0) return;
+
+        for (let i = 0; i < moves.length; i++) {
+
+        }
     }
 }

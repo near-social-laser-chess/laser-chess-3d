@@ -37,7 +37,6 @@ export class Game {
 
     applyMovement(movement) {
         this.movementIsLocked = true;
-
         const newBoard = new Board({ squares: this.squares });
 
         newBoard.applyMovement(movement);
@@ -53,6 +52,8 @@ export class Game {
         if (this.ai.movement) {
             this.ai.movement = null;
         }
+
+        this.selectedPieceLocation = null;
     }
 
     computeAIMovement() {
@@ -62,10 +63,6 @@ export class Game {
         const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
         this.ai.movement = movement.serialize();
         this.movementIsLocked = true;
-    }
-
-    toggleAI() {
-        this.ai.enabled = !this.ai.enabled;
     }
 
     finishMovement() {
@@ -95,12 +92,21 @@ export class Game {
     }
 
     selectPiece(location) {
-        this.selectedPieceLocation = location
+        const board = new Board({ squares: this.squares });
+        const piece = board.getSquare(location)
+        if (piece && piece.color === "blue") {
+            this.selectedPieceLocation = location
+        }
     }
 
     getMoveForSelectedPiece() {
+        if (!this.selectedPieceLocation) return;
         const board = new Board({ squares: this.squares });
         return board.getMovesForPieceAtLocation(this.selectedPieceLocation);
+    }
+
+    isPieceSelected() {
+        return !!this.selectedPieceLocation
     }
 
     unselectPiece() {
@@ -113,6 +119,10 @@ export class Game {
 
     resume() {
         this.status = GameStatusEnum.PLAYING;
+    }
+
+    toggleAI() {
+        this.ai.enabled = !this.ai.enabled;
     }
 }
 

@@ -16,6 +16,7 @@ document.addEventListener( 'mouseup', (e) => {
     const point = calculateClickedPoint(e);
     if (point) {
         const cell = board.getCellByCoords(...point.uv);
+        gameController.clickOnBoard(cell)
         board.movePiece(currentCell, cell);
         currentCell = cell;
     }
