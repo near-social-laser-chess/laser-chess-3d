@@ -1,8 +1,10 @@
 import * as THREE from "three";
 import {boardObj, scene} from "./scene.js";
-import {SwapPiecesRenderCallback, RotatePieceRenderCallback, MoveObjectRenderCallback} from "./RenderCallbacks.js";
+import {SwapPiecesRenderCallback, RotatePieceRenderCallback, MoveObjectRenderCallback,
+        KillPieceRenderCallback} from "./RenderCallbacks.js";
 
 export const board = boardObj;
+const PIECE_CENTER_Y = 0.438;
 
 board.cells = [];
 
@@ -143,8 +145,8 @@ board.drawLaserSegment = (startCoords, endCoords) => {
         startCoords,
         endCoords
     ]
-    points[0].y = 0.438;
-    points[1].y = 0.438;
+    points[0].y = PIECE_CENTER_Y;
+    points[1].y = PIECE_CENTER_Y;
 
     const geometryOuter = new THREE.TubeGeometry(
         new THREE.CatmullRomCurve3(points),
@@ -167,14 +169,42 @@ board.drawLaserSegment = (startCoords, endCoords) => {
     return [lineOuter, lineInner];
 }
 
+board.killAndRemovePiece = (cell, animationTime = 1000) => {
+    if (cell.piece === null)
+        return new Promise((resolve) => resolve());
+    return new Promise((resolve) => {
+        const callback = () => {
+            scene.remove(cell.piece);
+            cell.piece = null;
+            resolve();
+        }
+        const renderCallback = new KillPieceRenderCallback(cell.piece, animationTime, callback);
+        board.addRenderCallback(renderCallback);
+    });
+}
+
 board.drawLaserPath = (pathSegments, removeTimeout = 1000) => {
     let laserSegments = [];
     for (let cellPairIndex in pathSegments) {
         const cellPair = pathSegments[cellPairIndex];
         const points = [
             board.getCellCenter(cellPair.startCell),
-            board.getCellCenter(cellPair.endCell)
         ];
+        if (cellPair.endCell.piece != null) {
+            // raycast to the piece from the startCell
+            const raycaster = new THREE.Raycaster();
+            const start = points[0].clone();
+            start.y = PIECE_CENTER_Y;
+            const end = board.getCellCenter(cellPair.endCell).clone();
+            end.y = PIECE_CENTER_Y;
+            raycaster.set(start, end.clone().sub(start).normalize());
+            const intersects = raycaster.intersectObject(cellPair.endCell.piece, true);
+            if (intersects.length > 0) {
+                points.push(intersects[0].point);
+            }
+        } else {
+            points.push(board.getCellCenter(cellPair.endCell));
+        }
 
         // check if the cellPair.endCell is the border of the board and if so, check if the cellEnd has piece on it
         // and if not set the point[1] to the border
@@ -195,6 +225,13 @@ board.drawLaserPath = (pathSegments, removeTimeout = 1000) => {
     });
 }
 
+board.drawLaserPathWithKill = (pathSegments, removeLaserTimeout = 1000, removePieceAnimationTime = 1000) => {
+    const laserDrawing = board.drawLaserPath(pathSegments, removeLaserTimeout)
+    const lastCell = pathSegments[pathSegments.length - 1].endCell;
+    const killPiece = board.killAndRemovePiece(lastCell, removePieceAnimationTime);
+    return Promise.all([laserDrawing, killPiece]);
+}
+
 // for testing purposes only
 board.drawCells = () => {
     const material = new THREE.LineBasicMaterial( { color: 0x000000 } );
@@ -212,7 +249,7 @@ board.drawCells = () => {
         const line = new THREE.Line(geometry, material);
         scene.add(line);
     }
-    for (let z = -4; z <= 4; z++) {
+    for (let z = -3; z <= 3; z++) {
         const points = [];
         points.push(new THREE.Vector3( -5, 0, z ))
         points.push(new THREE.Vector3( 5, 0, z ))

@@ -66,9 +66,8 @@ export class SwapPiecesRenderCallback extends RenderCallback {
                 if (this.pieceObj1.position.y <= this.firstPieceDownEndCoord.y) {
                     this.pieceObj1.position.copy(this.firstPieceDownEndCoord);
                     this.isDrawn = true;
-                    if (this.callback != null) {
+                    if (this.callback instanceof Function)
                         this.callback();
-                    }
                 } else {
                     this.pieceObj1.position.add(this.firstPieceDownMovement);
                 }
@@ -100,11 +99,11 @@ export class RotatePieceRenderCallback extends RenderCallback {
         if (Math.abs(this.pieceObj.rotation.y - this.endAngle) <= this.interval || Math.abs(Math.PI * 2 + this.pieceObj.rotation.y - this.endAngle) <= this.interval) {
             this.pieceObj.rotation.y = this.endAngle;
             this.isDrawn = true;
-            if (this.callback != null)
-                this.callback();
             if (this.angle > 0 && this.pieceObj.rotation.y >= Math.PI * 2) {
                 this.pieceObj.rotation.y = 0;
             }
+            if (this.callback instanceof Function)
+                this.callback();
             return;
         }
         this.pieceObj.rotation.y += this.movement;
@@ -128,10 +127,76 @@ export class MoveObjectRenderCallback extends RenderCallback {
         if (this.startCoord.distanceTo(this.endCoord) <= this.interval) {
             this.pieceObj.position.copy(this.endCoord)
             this.isDrawn = true;
-            if (this.callback != null)
+            if (this.callback instanceof Function)
                 this.callback();
             return;
         }
         this.pieceObj.position.add(this.movement)
+    }
+}
+
+
+export class KillPieceRenderCallback extends RenderCallback {
+    constructor(pieceObj, animationTime = 2000, callback = null) {
+        super();
+        this.callback = callback;
+        this.animationTime = animationTime;
+        this.pieceObj = pieceObj;
+        this.framesCounter = 0;
+        this.animationFrames = this.animationTime / 1000 * 60;
+        this.child = pieceObj.children[0];
+        this.initialMaterials = this.child.material;
+        this.redMaterials = [];
+        for (let i = 0; i < this.initialMaterials.length; i++) {
+            const material = new THREE.MeshBasicMaterial({color: 0xff0000,
+                name: this.initialMaterials[i].name, side: THREE.DoubleSide});
+            this.redMaterials.push(material);
+        }
+        this.currentMaterial = this.initialMaterials;
+        this.currentStep = 0;
+    }
+
+    switchMaterial(currentStep) {
+        if (this.currentStep === currentStep) {
+            return;
+        }
+        if (this.currentMaterial === this.initialMaterials) {
+            this.child.material = this.redMaterials;
+            this.currentMaterial = this.redMaterials;
+        }
+        else {
+            this.child.material = this.initialMaterials;
+            this.currentMaterial = this.initialMaterials;
+        }
+        this.currentStep = currentStep;
+    }
+
+    draw() {
+        this.framesCounter++;
+        if (this.framesCounter / this.animationFrames < 0.2)
+            this.switchMaterial(0.2);
+        else if (this.framesCounter / this.animationFrames < 0.4)
+            this.switchMaterial(0.4);
+        else if (this.framesCounter / this.animationFrames < 0.5)
+            this.switchMaterial(0.5);
+        else if (this.framesCounter / this.animationFrames < 0.6)
+            this.switchMaterial(0.6);
+        else if (this.framesCounter / this.animationFrames < 0.7)
+            this.switchMaterial(0.7);
+        else if (this.framesCounter / this.animationFrames < 0.8)
+            this.switchMaterial(0.8);
+        else if (this.framesCounter / this.animationFrames < 0.85)
+            this.switchMaterial(0.85);
+        else if (this.framesCounter / this.animationFrames < 0.9)
+            this.switchMaterial(0.9);
+        else if (this.framesCounter / this.animationFrames < 0.95)
+            this.switchMaterial(0.95);
+        else if (this.framesCounter / this.animationFrames < 1)
+            this.switchMaterial(1);
+        else {
+            this.isDrawn = true;
+            if (this.callback instanceof Function)
+                this.callback();
+        }
     }
 }

@@ -7,6 +7,7 @@ import {GameController} from "./controller/main.js";
 
 let gameController = new GameController()
 let currentCell = board.findCell(3, 4)
+spawnPiece("redDefender", 0, 9, 90)
 let index = 0;
 const laserPath = [
     {
@@ -90,7 +91,8 @@ rotateButtonCounterClockwise.addEventListener('click', () => {
 
 rotateButtonClockwise.addEventListener('click', async () => {
     await board.rotatePiece(currentCell, 90);
-    await board.swapPieces(currentCell, board.findCell(3, 5));
-    await board.drawLaserPath(laserPath);
-    console.log("done");
+    await board.swapPieces(currentCell, board.findCell(4, 5));
+    await board.movePiece(currentCell, board.findCell(2, 4));
+    await board.drawLaserPathWithKill(laserPath, 1000, 2000);
+    console.log("done")
 });
