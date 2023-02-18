@@ -14,10 +14,8 @@ module.exports = {
         client: {
             overlay: {
                 errors: true,
-                // warnings: false,
             },
         },
-
     },
     experiments: {
         topLevelAwait: true
