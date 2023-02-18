@@ -19,7 +19,7 @@ class LHAN {
         const orientation = piece.orientation;
         const type = piece.type;
 
-        const request = await fetch('/assets/laser-v-piece.json');
+        const request = await fetch(`${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/laser-v-piece.json`);
         const json = await request.json();
         const objLoader = new THREE.ObjectLoader();
         const lhan_relations_json = objLoader.parse(json );

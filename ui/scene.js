@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 
 
-const request = await fetch('/assets/scene.json');
+const request = await fetch(`${process.env.BASE_URL ? process.env.BASE_URL: ""}/assets/scene.json`);
 const sceneJsonString = await request.json();
 
 
