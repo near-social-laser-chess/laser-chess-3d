@@ -1,0 +1,28 @@
+name: Build project to static
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Build project to static in branch "build"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Use Node.js
+      uses: actions/setup-node@main
+      with:
+        node-version: 18.x
+    - name: yarn install and build
+      run: |
+        yarn
+        BASE_URL=https://github.com/near-social-laser-chess/laser-chess-3d/blob/build yarn build
+
+    - name: Deploy
+      uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: git@github.com:owner/repo.git
+        BRANCH: build
+        FOLDER: build
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
