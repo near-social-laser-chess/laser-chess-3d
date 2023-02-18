@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import {scene} from "./scene.js";
 import {board} from "./board.js";
-import {OBJLoader} from 'OBJLoader';
-import {MTLLoader} from "MTLLoader";
+import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
+import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
 
 export const pieceModels = {
     yellowKing: {

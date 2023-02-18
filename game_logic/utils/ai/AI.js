@@ -1,4 +1,4 @@
-import lodash from "https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm"
+import {minBy, maxBy} from "lodash";
 import { PlayerTypesEnum } from "../../models/Enums.js";
 import Node from "./Node.js";
 
@@ -35,9 +35,9 @@ class AI {
         }
 
         if (player === PlayerTypesEnum.BLUE) {
-            return lodash.maxBy(rootNode.children, (childNode) => childNode.score).move;
+            return maxBy(rootNode.children, (childNode) => childNode.score).move;
         } else {
-            return lodash.minBy(rootNode.children, (childNode) => childNode.score).move;
+            return minBy(rootNode.children, (childNode) => childNode.score).move;
         }
     }
 }

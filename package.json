@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "dependencies": {
     "lodash": "^4.17.21",
-    "three": "^0.149.0"
+    "three": "^0.149.0",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "scripts": {
+    "start": "webpack serve --mode development --static ./ --open --hot",
+    "build": "webpack --mode production"
   }
 }

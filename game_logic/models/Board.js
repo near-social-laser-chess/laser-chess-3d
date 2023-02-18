@@ -12,7 +12,7 @@ import {PieceUtils} from "./Piece.js";
 import {SquareUtils} from "./Square.js";
 import SN from "../utils/SN.js";
 import LHAN from "../utils/LHAN.js";
-import lodash from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm'
+import {flatMap, toLower, toUpper} from "lodash";
 import Movement from "./Movement.js";
 import LaserPath from "./LaserPath.js";
 
@@ -95,7 +95,7 @@ class Board {
     getPlayerSquares(player) {
         // flatten all rows into a single array
         // console.log(board);
-        const flattenedSquares = lodash.flatMap(this.squares);
+        const flattenedSquares = flatMap(this.squares);
         return flattenedSquares.filter((square) => {
             // Filter out the squares with no pieces in it.
             // And only return the pieces of the specified color
@@ -476,11 +476,11 @@ class Board {
                     // type?
                     if (square.piece.color === PlayerTypesEnum.BLUE) {
                         // Blue uses upper case letters for piece type representation (L D B K S)
-                        sn += lodash.toUpper(square.piece.type);
+                        sn += toUpper(square.piece.type);
 
                     } else {
                         // Red uses lower case letter for piece type representation (l d b k s);
-                        sn += lodash.toLower(square.piece.type);
+                        sn += toLower(square.piece.type);
                     }
 
                     // orientation?
@@ -540,11 +540,11 @@ class Board {
                     // type?
                     if (square.piece.color === PlayerTypesEnum.BLUE) {
                         // Blue uses upper case letters for piece type representation (L D B K S)
-                        sn += lodash.toUpper(square.piece.type);
+                        sn += toUpper(square.piece.type);
 
                     } else {
                         // Red uses lower case letter for piece type representation (l d b k s);
-                        sn += lodash.toLower(square.piece.type);
+                        sn += toLower(square.piece.type);
                     }
 
                     sn += " ";
@@ -631,7 +631,7 @@ class Board {
             return [x, y];
         });
 
-        return lodash.flatMap(points);
+        return flatMap(points);
     }
 }
 

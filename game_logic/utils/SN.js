@@ -1,4 +1,5 @@
-import lodash from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm'
+// import lodash from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm'
+import {isString, isEmpty, reduce} from "lodash";
 import Square from "../models/Square.js";
 import Location from "../models/Location.js";
 import Piece from "../models/Piece.js";
@@ -51,7 +52,7 @@ class SN {
      * @throws Invalid Notation if notation is invalid, and the throwOnInvalid param is set to true.
      */
     static validate(notationText, throwOnInvalid = false) {
-        if (!lodash.isString(notationText)) {
+        if (!isString(notationText)) {
             if (throwOnInvalid) {
                 throw "Invalid notation – Must be string";
             }
@@ -147,13 +148,13 @@ class SN {
                 let squareType = SquareTypesEnum.NORMAL; // represents the square type in this location
 
                 // Check if we need a piece on this square
-                if (!lodash.isEmpty(col)) {
+                if (!isEmpty(col)) {
                     // Find out which piece we need.
                     const pieceType = col[0]; // type (Kk, Ll, Bb, Dd, Ss)
                     let orientation = 0; // orientation in 90deg increments (0, 90, 180, 270)
                     if (col.indexOf("+") != -1) {
                         const rotations = col.substring(1);
-                        orientation = lodash.reduce(rotations, (prev) => {
+                        orientation = reduce(rotations, (prev) => {
                             return prev + 90;
                         }, 0);
                     }

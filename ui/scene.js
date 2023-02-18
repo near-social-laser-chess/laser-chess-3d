@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {OrbitControls} from 'OrbitControls';
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 
 
 const request = await fetch('/assets/scene.json');

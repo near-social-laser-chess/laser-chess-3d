@@ -1,5 +1,5 @@
 import { LaserDirectionsEnum, PieceTypesEnum, SquareTypesEnum } from "./Enums.js";
-import lodash from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm'
+import {isEmpty} from 'lodash'
 
 class Square {
     /**
@@ -38,8 +38,8 @@ class SquareUtils {
      * @returns {boolean} true when the square has piece in it, otherwise false.
      */
     static hasPiece(square) {
-        if (lodash.isEmpty(square)) return false;
-        return !lodash.isEmpty(square.piece);
+        if (isEmpty(square)) return false;
+        return !isEmpty(square.piece);
     }
 
 
