@@ -22,8 +22,6 @@ export class GameController {
     }
 
     spawnAllFigures() {
-        board.drawCells();
-
         for (let i = 0; i < this.game.squares.length; i++) {
             let square = this.game.squares[i]
             for (let j = 0; j < square.length; j++) {

@@ -1,5 +1,7 @@
 import { LaserActionTypesEnum } from "../models/Enums.js";
-import * as THREE from 'three';
+
+const request = await fetch('/assets/laser-v-piece.json');
+const json = await request.json();
 
 /**
  * Laser Hit Action Notation
@@ -19,8 +21,6 @@ class LHAN {
         const orientation = piece.orientation;
         const type = piece.type;
 
-        const request = await fetch('/assets/laser-v-piece.json');
-        const json = await request.json();
         const hitAction = json[currentDirection][type][orientation];
 
         if (hitAction === "kill" || hitAction === "nothing") {
