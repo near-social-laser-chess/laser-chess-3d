@@ -215,7 +215,6 @@ board.killAndRemovePiece = (cell, animationTime = 1000) => {
 }
 
 board.drawLaserPath = (pathSegments, removeTimeout = 1000) => {
-    console.log(pathSegments);
     let laserSegments = [];
     for (let cellPairIndex in pathSegments) {
         const cellPair = pathSegments[cellPairIndex];
