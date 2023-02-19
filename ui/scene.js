@@ -65,8 +65,9 @@ document.body.appendChild( renderer.domElement );
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
 controls.enableZoom = false;
-controls.minPolarAngle = Math.PI / 3.7;
-controls.maxPolarAngle = Math.PI / 3.7;
+controls.enablePan = false;
+controls.minPolarAngle = Math.PI / 3.6;
+controls.maxPolarAngle = Math.PI / 3.6;
 
 export function animate() {
     requestAnimationFrame( animate );
