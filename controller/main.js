@@ -43,13 +43,25 @@ export class GameController {
     }
 
     async clickOnBoard(cell) {
-        if (this.game.movementIsLocked) return;
+        if (this.game.movementIsLocked || this.game.isGameFinished()) return;
+
+        this.game.lockMovement();
         const isUserMakeMove = await this.makeUserMove(cell);
-        if (!isUserMakeMove) return;
+        if (!isUserMakeMove) {
+            this.game.unlockMovement();
+            return;
+        }
+
+        if (this.game.isGameFinished()) {
+            console.log(this.game.getWinner())
+            return;
+        }
+
         await this.makeAIMove();
 
-        const winner = this.game.getWinner();
-        console.log(winner);
+        if (this.game.isGameFinished()) {
+            console.log(this.game.getWinner())
+        }
     }
 
     async makeUserMove(cell) {
@@ -84,7 +96,6 @@ export class GameController {
 
         if (this.game.checkPieceType(location, "l")) {
             const laserOrientation = this.game.getCellOrientation(location);
-            console.log(laserOrientation)
             if (laserOrientation === 0) {
                 enableRotateButtonCounterClockwise()
             } else {
@@ -175,16 +186,24 @@ export class GameController {
     }
 
     async makeAIMove() {
-        let aiMovement = this.game.computeAIMovement();
+        let aiMovement = await this.game.computeAIMovement();
         await this.game.applyMovement(aiMovement);
 
         await this.makeMove(aiMovement);
         await this.finishMove();
+
+        this.game.unlockMovement();
     }
 
     async rotatePiece(rotateType) {
+        if (this.game.movementIsLocked || this.game.isGameFinished()) return;
+        this.game.lockMovement();
+
         const selectedPieceLocation = this.game.getSelectedPiece();
-        if (!selectedPieceLocation) return;
+        if (!selectedPieceLocation) {
+            this.game.unlockMovement();
+            return;
+        }
         this.unhighlightAllCells();
 
         const move = new Movement(rotateType, selectedPieceLocation, selectedPieceLocation)

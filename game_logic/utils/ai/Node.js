@@ -29,18 +29,18 @@ class Node {
 
     /**
      * Expands this node!
-     * 
+     *
      * @returns {number} the length of available movements of current node
      */
-    expand() {
+    async expand() {
         const opponent_player = (this.player === PlayerTypesEnum.RED) ? PlayerTypesEnum.BLUE : PlayerTypesEnum.RED;
         this.children = []; // clear any previous children of this node.
 
-        this.movements.forEach(movement => {
-            const newBoard = this.board.newBoardFromMovement(movement, this.player);
+        for (const movement of this.movements) {
+            const newBoard = await this.board.newBoardFromMovement(movement, this.player);
             const childrenNode = new Node(this.biasPlayer, newBoard, opponent_player, movement, this.self);
             this.children.push(childrenNode);
-        });
+        }
 
         // Return the length of the movements
         return this.movements.length;

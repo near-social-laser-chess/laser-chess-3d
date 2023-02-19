@@ -32,6 +32,11 @@ export class Game {
         return this.winner;
     }
 
+    isGameFinished() {
+        console.log(this.status)
+        return this.status === GameStatusEnum.GAME_OVER;
+    }
+
     setBoardType() {
         let newBoard = new Board({}).serialize();
         this.squares = newBoard.squares;
@@ -44,7 +49,6 @@ export class Game {
    }
 
     async applyMovement(movement) {
-        this.movementIsLocked = true;
         const newBoard = new Board({squares: this.squares});
 
         newBoard.applyMovement(movement);
@@ -64,22 +68,21 @@ export class Game {
         this.selectedPieceLocation = null;
     }
 
-    computeAIMovement() {
-        const newBoard = new Board({ squares: this.squares });
+    async computeAIMovement() {
+        const newBoard = new Board({squares: this.squares});
 
         const ai = new AI();
-        const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
+        const movement = await ai.computeMove(newBoard, PlayerTypesEnum.RED);
         this.ai.movement = movement.serialize();
-        this.movementIsLocked = true;
 
         return this.ai.movement;
     }
 
-    finishMovement() {
-        const newBoard = new Board({ squares: this.squares })
-        newBoard.applyLaser(this.currentPlayer)
-        const serializedBoard = newBoard.serialize()
+    async finishMovement() {
+        const newBoard = new Board({squares: this.squares})
+        await newBoard.applyLaser(this.currentPlayer)
 
+        const serializedBoard = newBoard.serialize()
         this.winner = serializedBoard.winner
         this.sn = serializedBoard.sn
         this.squares = serializedBoard.squares
@@ -87,7 +90,6 @@ export class Game {
         // Check if game over
         if (serializedBoard.winner) {
             // If game is over, then keep the movement locked and show who won in the UI.
-            this.movementIsLocked = true
             this.status = GameStatusEnum.GAME_OVER
         } else {
             // reset laser
@@ -97,7 +99,6 @@ export class Game {
 
             // If game is not over, then pass the turn to the next player
             this.currentPlayer = (this.currentPlayer === PlayerTypesEnum.BLUE) ? PlayerTypesEnum.RED : PlayerTypesEnum.BLUE
-            this.movementIsLocked = false // unlock the movement for the next player.
         }
     }
 
@@ -150,6 +151,14 @@ export class Game {
         const board = new Board({ squares: this.squares });
         let square = board.getSquare(location)
         return square.piece.orientation;
+    }
+
+    lockMovement() {
+        this.movementIsLocked = true;
+    }
+
+    unlockMovement() {
+        this.movementIsLocked = false;
     }
 
     pause () {

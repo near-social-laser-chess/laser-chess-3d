@@ -430,12 +430,10 @@ class Board {
         if (finalLaserPath.actionType === LaserActionTypesEnum.KILL) {
             const squareAtHit = this.squares[finalLaserPath.location.rowIndex][finalLaserPath.location.colIndex];
             // Check if we killed the King!
-            if (squareAtHit.piece.type === PieceTypesEnum.KING) {
+            if (squareAtHit.piece.type === 'k') {
                 // Oh lord, the king is dead, I repeat, the king is dead!
                 // Check which king is dead and declare the winner! 🏴‍☠️
-                const winnerPlayerColor = squareAtHit.piece.color === PlayerTypesEnum.BLUE ? PlayerTypesEnum.RED : PlayerTypesEnum.BLUE;
-                this.winner = winnerPlayerColor;
-
+                this.winner = squareAtHit.piece.color === PlayerTypesEnum.BLUE ? PlayerTypesEnum.RED : PlayerTypesEnum.BLUE;
             }
             // Remove the piece from the square.
             squareAtHit.piece = null;
@@ -448,10 +446,10 @@ class Board {
      * @param {Movement} movement the movement being performed on the board
      * @param {PlayerTypesEnum} playerType the player that is moving
      */
-    newBoardFromMovement(movement, playerType) {
+    async newBoardFromMovement(movement, playerType) {
         const newBoard = new Board({setupNotation: this.toSN()}); // clone this board
         newBoard.applyMovement(movement);
-        newBoard.applyLaser(playerType);
+        await newBoard.applyLaser(playerType);
         return newBoard;
     }
 
