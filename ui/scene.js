@@ -43,7 +43,7 @@ const objLoader = new THREE.ObjectLoader();
 
 export const scene = objLoader.parse(sceneJsonString);
 export const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20);
-camera.position.set(0, 7, 8);
+camera.position.set(0, 8, 7);
 camera.lookAt(0, 0, 0);
 
 export const boardObj = scene.children.find((obj) => obj.name === "Board");
@@ -65,8 +65,8 @@ document.body.appendChild( renderer.domElement );
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
 controls.enableZoom = false;
-controls.minPolarAngle = Math.PI / 3.7; // radians
-controls.maxPolarAngle = Math.PI / 3.7; // radians
+controls.minPolarAngle = Math.PI / 3.7;
+controls.maxPolarAngle = Math.PI / 3.7;
 
 export function animate() {
     requestAnimationFrame( animate );
@@ -75,4 +75,5 @@ export function animate() {
     }
     boardObj.removeDrawnRenderCallbacks();
     renderer.render( scene, camera );
+    controls.update();
 }
