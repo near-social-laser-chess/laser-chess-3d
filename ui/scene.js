@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-// import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 
 
 const request = await fetch(`${BASE_URL}/assets/scene.json`);
@@ -43,7 +43,7 @@ const objLoader = new THREE.ObjectLoader();
 
 export const scene = objLoader.parse(sceneJsonString);
 export const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20);
-camera.position.set(0, 6, 8);
+camera.position.set(0, 7, 8);
 camera.lookAt(0, 0, 0);
 
 export const boardObj = scene.children.find((obj) => obj.name === "Board");
@@ -62,9 +62,11 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-// // TODO: remove controls
-// const controls = new OrbitControls(camera, renderer.domElement);
-// controls.target.set(0, 0, 0);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0, 0);
+controls.enableZoom = false;
+controls.minPolarAngle = Math.PI / 3.7; // radians
+controls.maxPolarAngle = Math.PI / 3.7; // radians
 
 export function animate() {
     requestAnimationFrame( animate );

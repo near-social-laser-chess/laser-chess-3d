@@ -7,6 +7,35 @@ import {Color} from "three";
 export const board = boardObj;
 const PIECE_CENTER_Y = 0.438;
 
+export const HighlightType = {
+    current: "current",
+    possible: "possible",
+    swap: "swap",
+}
+
+const loader = new THREE.TextureLoader();
+
+const HighlightMaterials = {
+    [HighlightType.current]: new THREE.MeshBasicMaterial({
+        map: loader.load(`${BASE_URL}/assets/currentHighlight.png`),
+        side: THREE.FrontSide,
+        transparent: true,
+        opacity: 0.5
+    }),
+    [HighlightType.possible]: new THREE.MeshBasicMaterial({
+        map: loader.load(`${BASE_URL}/assets/possibleHighlight.png`),
+        side: THREE.FrontSide,
+        transparent: true,
+        opacity: 0.5
+    }),
+    [HighlightType.swap]: new THREE.MeshBasicMaterial({
+        map: loader.load(`${BASE_URL}/assets/swapHighlight.png`),
+        side: THREE.FrontSide,
+        transparent: true,
+        opacity: 0.5
+    }),
+}
+
 board.cells = [];
 
 const initCells = () => {
@@ -48,14 +77,12 @@ board.getCellCenter = (cell) => {
     return new THREE.Vector3(cell.col - 5 + 0.5, 0, cell.row - 4 + 0.5)
 }
 
-board.highlightCell = (row, col, color) => {
+board.highlightCell = (row, col, highlightType = HighlightType.possible) => {
     if (board.isCellHighlighted(row, col))
         return;
-    if (color == null)
-        color = 0x00ff00;
 
     const geometry = new THREE.PlaneGeometry( 1, 1 );
-    const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.FrontSide} );
+    const material = HighlightMaterials[highlightType]
     const plane = new THREE.Mesh( geometry, material );
 
     const center = board.getCellCenter({row, col});
@@ -63,6 +90,7 @@ board.highlightCell = (row, col, color) => {
     plane.position.z = center.z;
     plane.position.y = 0.002;
     plane.rotation.x = Math.PI / 2 * -1;
+    plane.scale.set(0.98, 0.98, 0.98)
     scene.add(plane);
     const cell = board.findCell(row, col);
     cell.highlightObj = plane;
