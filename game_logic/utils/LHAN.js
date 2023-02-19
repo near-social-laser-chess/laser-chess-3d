@@ -22,6 +22,7 @@ class LHAN {
         const request = await fetch('/assets/laser-v-piece.json');
         const json = await request.json();
         const hitAction = json[currentDirection][type][orientation];
+
         if (hitAction === "kill" || hitAction === "nothing") {
             return {
                 type: hitAction,

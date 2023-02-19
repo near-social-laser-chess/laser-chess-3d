@@ -1,9 +1,16 @@
 import {Game} from '../game_logic/main.js'
 import {board} from "../ui/board.js";
+import {
+    disableRotateButtons,
+    enableRotateButtonClockwise,
+    enableRotateButtonCounterClockwise,
+    enableRotateButtons
+} from "../ui/scene.js";
 import {animate} from "../ui/scene.js";
 import {getPieceName} from "./utils.js";
 import {spawnPiece} from "../ui/spawn.js";
 import Location from "../game_logic/models/Location.js";
+import Movement from "../game_logic/models/Movement";
 
 export class GameController {
     constructor(board) {
@@ -39,7 +46,10 @@ export class GameController {
         if (this.game.movementIsLocked) return;
         const isUserMakeMove = await this.makeUserMove(cell);
         if (!isUserMakeMove) return;
-        await this.makeAIMove()
+        await this.makeAIMove();
+
+        const winner = this.game.getWinner();
+        console.log(winner);
     }
 
     async makeUserMove(cell) {
@@ -52,7 +62,7 @@ export class GameController {
         if (!move) return false;
 
         this.unhighlightAllCells();
-        this.game.applyMovement(move);
+        await this.game.applyMovement(move);
         await this.makeMove(move)
         await this.finishMove();
 
@@ -60,7 +70,9 @@ export class GameController {
     }
 
     selectPiece(location) {
-        if (!this.game.selectPiece(location)) return false;
+        if (!this.game.selectPiece(location)) {
+            return false;
+        }
 
         this.unhighlightAllCells();
         const moves = this.game.getMoveForSelectedPiece();
@@ -70,12 +82,25 @@ export class GameController {
         }
         this.highlightedMoves = moves;
 
+        if (this.game.checkPieceType(location, "l")) {
+            const laserOrientation = this.game.getCellOrientation(location);
+            console.log(laserOrientation)
+            if (laserOrientation === 0) {
+                enableRotateButtonCounterClockwise()
+            } else {
+                enableRotateButtonClockwise();
+            }
+        } else if (!this.game.checkPieceType(location, "k")) {
+            enableRotateButtons();
+        }
+
         return true;
     }
 
     unhighlightAllCells() {
         board.unhighlightAllCells();
         this.highlightedMoves = [];
+        disableRotateButtons()
     }
 
     unselectPiece(location) {
@@ -102,6 +127,10 @@ export class GameController {
 
         if (move.type === "special") {
             return await board.swapPieces(srcCell, destCell)
+        } else if (move.type === "clockwise_rotation") {
+            return await board.rotatePiece(srcCell, 90);
+        } else if (move.type === "c_clockwise_rotation") {
+            return await board.rotatePiece(srcCell, -90);
         }
         return await board.movePiece(srcCell, destCell)
     }
@@ -147,9 +176,21 @@ export class GameController {
 
     async makeAIMove() {
         let aiMovement = this.game.computeAIMovement();
-        this.game.applyMovement(aiMovement);
+        await this.game.applyMovement(aiMovement);
 
         await this.makeMove(aiMovement);
         await this.finishMove();
+    }
+
+    async rotatePiece(rotateType) {
+        const selectedPieceLocation = this.game.getSelectedPiece();
+        if (!selectedPieceLocation) return;
+        this.unhighlightAllCells();
+
+        const move = new Movement(rotateType, selectedPieceLocation, selectedPieceLocation)
+        await this.game.applyMovement(move);
+        await this.makeMove(move);
+        await this.finishMove();
+        await this.makeAIMove();
     }
 }

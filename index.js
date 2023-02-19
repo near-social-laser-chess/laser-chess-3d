@@ -1,64 +1,11 @@
-import {camera, animate, renderer, rotateButtonClockwise,
+import {camera, renderer, rotateButtonClockwise,
     rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
 import {board} from "./ui/board.js";
 import {calculateClickedPoint} from "./controller/utils.js";
-import {spawnPiece, pieceModels} from "./ui/spawn.js";
 import {GameController} from "./controller/main.js";
+import {MovementTypesEnum} from "./game_logic/models/Enums";
 
 let gameController = new GameController()
-let currentCell = board.findCell(3, 4)
-spawnPiece("redDefender", 0, 9, 90)
-let index = 0;
-const laserPath = [
-    {
-        startCell: board.findCell(7, 9),
-        endCell: board.findCell(6, 9)
-    },
-    {
-        startCell: board.findCell(6, 9),
-        endCell: board.findCell(5, 9)
-    },
-    {
-        startCell: board.findCell(5, 9),
-        endCell: board.findCell(4, 9)
-    },
-    {
-        startCell: board.findCell(4, 9),
-        endCell: board.findCell(4, 8)
-    },
-    {
-        startCell: board.findCell(4, 8),
-        endCell: board.findCell(4, 7)
-    },
-    {
-        startCell: board.findCell(4, 7),
-        endCell: board.findCell(3, 7)
-    },
-    {
-        startCell: board.findCell(3, 7),
-        endCell: board.findCell(3, 8)
-    },
-    {
-        startCell: board.findCell(3, 8),
-        endCell: board.findCell(3, 9)
-    },
-    {
-        startCell: board.findCell(3, 9),
-        endCell: board.findCell(2, 9)
-    },
-    {
-        startCell: board.findCell(2, 9),
-        endCell: board.findCell(1, 9)
-    },
-    {
-        startCell: board.findCell(1, 9),
-        endCell: board.findCell(0, 9)
-    }
-]
-
-// for (let cellPair of laserPath) {
-//     board.drawLaser(cellPair.start, cellPair.end)
-// }
 
 document.addEventListener( 'mouseup', async (e) => {
     const point = calculateClickedPoint(e);
@@ -83,14 +30,10 @@ document.addEventListener('resize', (e) => {
 });
 
 
-rotateButtonCounterClockwise.addEventListener('click', () => {
-    board.rotatePiece(currentCell, -90);
+rotateButtonCounterClockwise.addEventListener('click', async () => {
+    await gameController.rotatePiece(MovementTypesEnum.ROTATION_C_CLOCKWISE);
 });
 
 rotateButtonClockwise.addEventListener('click', async () => {
-    await board.rotatePiece(currentCell, 90);
-    await board.swapPieces(currentCell, board.findCell(4, 5));
-    await board.movePiece(currentCell, board.findCell(2, 4));
-    await board.drawLaserPathWithKill(laserPath, 1000, 2000);
-    console.log("done")
+    await gameController.rotatePiece(MovementTypesEnum.ROTATION_CLOCKWISE);
 });
