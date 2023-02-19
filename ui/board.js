@@ -61,7 +61,7 @@ board.highlightCell = (row, col, color) => {
     const center = board.getCellCenter({row, col});
     plane.position.x = center.x;
     plane.position.z = center.z;
-    plane.position.y = 0.001;
+    plane.position.y = 0.002;
     plane.rotation.x = Math.PI / 2 * -1;
     scene.add(plane);
     const cell = board.findCell(row, col);
