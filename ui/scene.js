@@ -68,6 +68,7 @@ controls.enableZoom = false;
 controls.enablePan = false;
 controls.minPolarAngle = Math.PI / 3.6;
 controls.maxPolarAngle = Math.PI / 3.6;
+controls.rotateSpeed = 0.3;
 
 export function animate() {
     requestAnimationFrame( animate );
