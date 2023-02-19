@@ -11,6 +11,7 @@ import {getPieceName} from "./utils.js";
 import {spawnPiece} from "../ui/spawn.js";
 import Location from "../game_logic/models/Location.js";
 import Movement from "../game_logic/models/Movement";
+import {showWinnerMessage} from "../ui/main";
 
 export class GameController {
     constructor(board) {
@@ -51,14 +52,20 @@ export class GameController {
         }
 
         if (this.game.isGameFinished()) {
-            console.log(this.game.getWinner())
+            if (this.game.getWinner() === "red")
+                showWinnerMessage("You lose!", "Reload page to restart.")
+            else if (this.game.getWinner() === "blue")
+                showWinnerMessage("You win!", "Reload page to restart.")
             return;
         }
 
         await this.makeAIMove();
 
         if (this.game.isGameFinished()) {
-            console.log(this.game.getWinner())
+            if (this.game.getWinner() === "red")
+                showWinnerMessage("You lose!", "Reload page to restart.")
+            else if (this.game.getWinner() === "blue")
+                showWinnerMessage("You win!", "Reload page to restart.")
         }
     }
 
