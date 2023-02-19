@@ -147,7 +147,7 @@ class Board {
      *
      * @param {PlayerTypesEnum} playerType the player who will applying the laser
      */
-    async getLaserRoute(playerType) {
+    getLaserRoute(playerType) {
         const completeRoute = []; // holds the laser path!
 
         // Get the laser of the player on the move
@@ -208,7 +208,7 @@ class Board {
                 // Check if it has a piece in this square
                 if (SquareUtils.hasPiece(nextScanningSquare)) {
                     // If piece was found, check what we have to do, based on the Laser Hit Action Notation of the piece in the scanning square
-                    const action = await LHAN.getHitAction(direction, nextScanningSquare.piece);
+                    const action = LHAN.getHitAction(direction, nextScanningSquare.piece);
                     if (action.type === LaserActionTypesEnum.KILL) {
                         // The piece in this square should be killed/eaten/captured.
                         eventType = LaserEventsEnum.END; // end the scanning, we reached the limit for this laser beam.
@@ -417,13 +417,13 @@ class Board {
      * @param {PlayerTypesEnum} playerType the player whose laser is being switched on.
      * @returns {number[][]} the
      */
-    async applyLaser(playerType) {
+    applyLaser(playerType) {
         if (!playerType) {
             throw new Error("applyLaser - Please specify the player whose laser is being switched on.");
         }
 
         // Compute the laser beam route, and do actions on the necessary pieces.
-        const laserRoute = await this.getLaserRoute(playerType);
+        const laserRoute = this.getLaserRoute(playerType);
         const finalLaserPath = laserRoute[laserRoute.length - 1];
 
         // handle the laser hit
@@ -446,10 +446,10 @@ class Board {
      * @param {Movement} movement the movement being performed on the board
      * @param {PlayerTypesEnum} playerType the player that is moving
      */
-    async newBoardFromMovement(movement, playerType) {
+    newBoardFromMovement(movement, playerType) {
         const newBoard = new Board({setupNotation: this.toSN()}); // clone this board
         newBoard.applyMovement(movement);
-        await newBoard.applyLaser(playerType);
+        newBoard.applyLaser(playerType);
         return newBoard;
     }
 

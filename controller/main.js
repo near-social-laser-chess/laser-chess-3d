@@ -184,7 +184,7 @@ export class GameController {
     }
 
     async makeAIMove() {
-        let aiMovement = await this.game.computeAIMovement();
+        let aiMovement = this.game.computeAIMovement();
         await this.game.applyMovement(aiMovement);
 
         await this.makeMove(aiMovement);

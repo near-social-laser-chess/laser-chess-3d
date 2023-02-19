@@ -1,6 +1,6 @@
 import { LaserActionTypesEnum } from "../models/Enums.js";
 
-const request = await fetch('/assets/laser-v-piece.json');
+const request = await fetch(`${BASE_URL}/assets/laser-v-piece.json`);
 const json = await request.json();
 
 /**
@@ -17,7 +17,7 @@ class LHAN {
      *
      * @returns {object} { actionType: LaserActionTypesEnum, newDirection LaserDirectionsEnum | null }
      */
-    static async getHitAction(currentDirection, piece) {
+    static getHitAction(currentDirection, piece) {
         const orientation = piece.orientation;
         const type = piece.type;
 

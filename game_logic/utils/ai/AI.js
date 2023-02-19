@@ -17,10 +17,10 @@ class AI {
      *
      * @returns {Movement} the best possible movement for this player
      */
-    async computeMove(board, player) {
+    computeMove(board, player) {
         let evaluations = 0; // number of evaluations made
         const rootNode = new Node(player, board, player);
-        evaluations += await rootNode.expand();
+        evaluations += rootNode.expand();
 
         // Interatively expand the tree levels, till the limit is reached.
         // Expands the least promissing leaf of the most promising path.
@@ -30,7 +30,7 @@ class AI {
                 // We lost the game (min leaf == lose then we lost)
                 break;
             }
-            evaluations += await leaf.expand();
+            evaluations += leaf.expand();
             leaf.updateScore(player);
         }
 

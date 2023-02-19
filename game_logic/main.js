@@ -68,11 +68,11 @@ export class Game {
         this.selectedPieceLocation = null;
     }
 
-    async computeAIMovement() {
+    computeAIMovement() {
         const newBoard = new Board({squares: this.squares});
 
         const ai = new AI();
-        const movement = await ai.computeMove(newBoard, PlayerTypesEnum.RED);
+        const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
         this.ai.movement = movement.serialize();
 
         return this.ai.movement;
