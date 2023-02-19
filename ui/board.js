@@ -39,15 +39,16 @@ const HighlightMaterials = {
 board.cells = [];
 
 const initCells = () => {
-    for (let row = 0; row < 8; row++) {
-        for (let col = 0; col < 10; col++) {
+    for (let row = -1; row < 9; row++) {
+        for (let col = -1; col < 11; col++) {
             board.cells.push({
                 row: row,
                 col: col,
                 isBorder: row === 0 || row === 7 || col === 0 || col === 9,
                 isHighlighted: false,
                 highlightObj: null,
-                piece: null
+                piece: null,
+                outOfBoard: row === -1 || row === 8 || col === -1 || col === 10,
             })
         }
     }
@@ -63,7 +64,7 @@ board.getCellByCoords = (x, y) => {
 }
 
 board.findCell = (row, col) => {
-    if (row < 0 || row > 7 || col < 0 || col > 9) {
+    if (row < -1 || row > 8 || col < -1 || col > 10) {
         throw new Error(`Invalid cell coordinates row=${row}, col=${col}`);
     }
     return board.cells.find((obj) => obj.row === row && obj.col === col);
@@ -214,6 +215,7 @@ board.killAndRemovePiece = (cell, animationTime = 1000) => {
 }
 
 board.drawLaserPath = (pathSegments, removeTimeout = 1000) => {
+    console.log(pathSegments);
     let laserSegments = [];
     for (let cellPairIndex in pathSegments) {
         const cellPair = pathSegments[cellPairIndex];
@@ -238,7 +240,7 @@ board.drawLaserPath = (pathSegments, removeTimeout = 1000) => {
 
         // check if the cellPair.endCell is the border of the board and if so, check if the cellEnd has piece on it
         // and if not set the point[1] to the border
-        if (cellPairIndex == pathSegments.length - 1 && cellPair.endCell.piece == null && cellPair.endCell.isBorder) {
+        if (cellPairIndex == pathSegments.length - 1 && cellPair.endCell.piece == null && cellPair.endCell.outOfBoard) {
             const diff = points[1].clone().sub(points[0]);
             points[1].add(diff.multiplyScalar(10))
         }

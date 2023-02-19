@@ -172,11 +172,9 @@ export class GameController {
         for (let i = 1; i < laser.route.length; i++) {
             const startRow = laser.route[i - 1].location.rowIndex;
             const startCol = laser.route[i - 1].location.colIndex;
-            if (startRow < 0 || startRow > 7 || startCol < 0 || startCol > 9) return laserPath;
 
             const endRow = laser.route[i].location.rowIndex;
             const endCol = laser.route[i].location.colIndex;
-            if (endRow < 0 || endRow > 7 || endCol < 0 || endCol > 9) return laserPath;
 
             const startCell = board.findCell(startRow, startCol);
             const endCell = board.findCell(endRow, endCol);
