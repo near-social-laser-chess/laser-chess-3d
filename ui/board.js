@@ -5,7 +5,7 @@ import {SwapPiecesRenderCallback, RotatePieceRenderCallback, MoveObjectRenderCal
 
 const PIECE_CENTER_Y = 0.438;
 
-const HighlightType = Object.freeze({
+export const HighlightType = Object.freeze({
     current: "current",
     possible: "possible",
     swap: "swap",

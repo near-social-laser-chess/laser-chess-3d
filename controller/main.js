@@ -12,6 +12,7 @@ import {spawnPiece} from "../ui/spawn.js";
 import Location from "../game_logic/models/Location.js";
 import Movement from "../game_logic/models/Movement";
 import {showWinnerMessage} from "../ui/main";
+import {HighlightType} from "../ui/board";
 
 export class GameController {
     constructor(board) {
@@ -96,8 +97,13 @@ export class GameController {
         this.unhighlightAllCells();
         const moves = this.game.getMoveForSelectedPiece();
 
+        board.highlightCell(location.rowIndex, location.colIndex, HighlightType.current)
         for (let i = 0; i < moves.length; i++) {
-            board.highlightCell(moves[i].destLocation.rowIndex, moves[i].destLocation.colIndex)
+            if (moves[i].type === "special") {
+                board.highlightCell(moves[i].destLocation.rowIndex, moves[i].destLocation.colIndex, HighlightType.swap)
+            } else {
+                board.highlightCell(moves[i].destLocation.rowIndex, moves[i].destLocation.colIndex)
+            }
         }
         this.highlightedMoves = moves;
 
