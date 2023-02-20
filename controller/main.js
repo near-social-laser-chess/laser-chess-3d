@@ -1,5 +1,5 @@
 import {Game} from '../game_logic/main.js'
-import {board} from "../ui/board.js";
+import {board} from "../ui/scene.js";
 import {
     disableRotateButtons,
     enableRotateButtonClockwise,

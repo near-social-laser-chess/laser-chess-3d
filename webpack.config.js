@@ -12,6 +12,7 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname, 'build'),
             publicPath: `${process.env.BASE_URL ? process.env.BASE_URL: ""}/`,
             assetModuleFilename: "assets/[name][ext]",
+            library: 'EntryPoint',
         },
         devServer: {
             port: 8080,
@@ -22,9 +23,6 @@ module.exports = (env, argv) => {
                     errors: true,
                 },
             },
-        },
-        experiments: {
-            topLevelAwait: true
         },
         plugins: [
             new HtmlWebpackPlugin({

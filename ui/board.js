@@ -1,44 +1,52 @@
 import * as THREE from "three";
-import {boardObj, scene} from "./scene.js";
+import {board, scene} from "./scene.js";
 import {SwapPiecesRenderCallback, RotatePieceRenderCallback, MoveObjectRenderCallback,
         KillPieceRenderCallback} from "./RenderCallbacks.js";
-import {Color} from "three";
 
-export const board = boardObj;
 const PIECE_CENTER_Y = 0.438;
 
-export const HighlightType = {
+const HighlightType = Object.freeze({
     current: "current",
     possible: "possible",
     swap: "swap",
-}
+})
 
-const loader = new THREE.TextureLoader();
 
 const HighlightMaterials = {
+    initialized: false,
+    get: (highlightType) => {
+        if (!HighlightMaterials.initialized) throw new Error("HighlightMaterials not initialized. Call initHighlightMaterials() first.");
+        return HighlightMaterials[highlightType];
+    },
     [HighlightType.current]: new THREE.MeshBasicMaterial({
-        map: loader.load(`${BASE_URL}/assets/currentHighlight.png`),
         side: THREE.FrontSide,
         transparent: true,
         opacity: 0.5
     }),
     [HighlightType.possible]: new THREE.MeshBasicMaterial({
-        map: loader.load(`${BASE_URL}/assets/possibleHighlight.png`),
         side: THREE.FrontSide,
         transparent: true,
         opacity: 0.5
     }),
     [HighlightType.swap]: new THREE.MeshBasicMaterial({
-        map: loader.load(`${BASE_URL}/assets/swapHighlight.png`),
         side: THREE.FrontSide,
         transparent: true,
         opacity: 0.5
     }),
 }
 
+export const initHighlightMaterials = () => {
+    if (HighlightMaterials.initialized) return;
+    const loader = new THREE.TextureLoader();
+    HighlightMaterials[HighlightType.current].map = loader.load(`${BASE_URL}/assets/currentHighlight.png`);
+    HighlightMaterials[HighlightType.possible].map = loader.load(`${BASE_URL}/assets/possibleHighlight.png`);
+    HighlightMaterials[HighlightType.swap].map = loader.load(`${BASE_URL}/assets/swapHighlight.png`);
+    HighlightMaterials.initialized = true;
+}
+
 board.cells = [];
 
-const initCells = () => {
+export const initCells = () => {
     for (let row = -1; row < 9; row++) {
         for (let col = -1; col < 11; col++) {
             board.cells.push({
@@ -53,8 +61,6 @@ const initCells = () => {
         }
     }
 }
-
-initCells();
 
 board.getCellByCoords = (x, y) => {
     // get cell index in matrix by normalized coordinates (0 <= x,y <= 1)
@@ -83,7 +89,7 @@ board.highlightCell = (row, col, highlightType = HighlightType.possible) => {
         return;
 
     const geometry = new THREE.PlaneGeometry( 1, 1 );
-    const material = HighlightMaterials[highlightType]
+    const material = HighlightMaterials.get(highlightType)
     const plane = new THREE.Mesh( geometry, material );
 
     const center = board.getCellCenter({row, col});

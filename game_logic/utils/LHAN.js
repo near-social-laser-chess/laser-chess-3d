@@ -1,7 +1,8 @@
 import { LaserActionTypesEnum } from "../models/Enums.js";
 
-const request = await fetch(`${BASE_URL}/assets/laser-v-piece.json`);
-const json = await request.json();
+// const request = await fetch(`${BASE_URL}/assets/laser-v-piece.json`);
+let json;
+fetch(`${BASE_URL}/assets/laser-v-piece.json`).then(r => r.json()).then(r => json = r);
 
 /**
  * Laser Hit Action Notation

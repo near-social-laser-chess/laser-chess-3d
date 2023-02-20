@@ -2,10 +2,6 @@ import * as THREE from 'three';
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 
 
-const request = await fetch(`${BASE_URL}/assets/scene.json`);
-const sceneJsonString = await request.json();
-
-
 export const rotateButtonCounterClockwise = document.querySelector("button[aria-label='rotate piece left']");
 export const rotateButtonClockwise = document.querySelector("button[aria-label='rotate piece right']");
 
@@ -41,19 +37,33 @@ export class RenderCallback {
 
 const objLoader = new THREE.ObjectLoader();
 
-export const scene = objLoader.parse(sceneJsonString);
+export let scene = {};
+export let board = {};
+
+export const initScene = async () => {
+    const request = await fetch(`${BASE_URL}/assets/scene.json`);
+    const sceneJsonString = await request.json();
+    const loadedScene = objLoader.parse(sceneJsonString);
+    const loadedBoard = loadedScene.children.find((obj) => obj.name === "Board");
+    // scene.copy(loadedScene, true);
+    // boardObj.copy(loadedBoard, true);
+    // scene.__proto__ = loadedScene.__proto__;
+    // boardObj.__proto__ = loadedBoard.__proto__;
+    scene = Object.assign(loadedScene, scene);
+    board = Object.assign(loadedBoard, board);
+}
+
 export const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20);
 camera.position.set(0, 8, 7);
 camera.lookAt(0, 0, 0);
 
-export const boardObj = scene.children.find((obj) => obj.name === "Board");
-boardObj.renderCallbacks = [];
-boardObj.removeDrawnRenderCallbacks = () => {
-    boardObj.renderCallbacks = boardObj.renderCallbacks.filter((el) => !el.isDrawn);
+board.renderCallbacks = [];
+board.removeDrawnRenderCallbacks = () => {
+    board.renderCallbacks = board.renderCallbacks.filter((el) => !el.isDrawn);
 }
 
-boardObj.addRenderCallback = (renderCallback) => {
-    boardObj.renderCallbacks.push(renderCallback)
+board.addRenderCallback = (renderCallback) => {
+    board.renderCallbacks.push(renderCallback)
 }
 
 export const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -72,10 +82,10 @@ controls.rotateSpeed = 0.3;
 
 export function animate() {
     requestAnimationFrame( animate );
-    for (let renderCallback of boardObj.renderCallbacks) {
+    for (let renderCallback of board.renderCallbacks) {
         renderCallback.render();
     }
-    boardObj.removeDrawnRenderCallbacks();
+    board.removeDrawnRenderCallbacks();
     renderer.render( scene, camera );
     controls.update();
 }
