@@ -17,6 +17,8 @@ export const initGame = async () => {
         if (point) {
             const cell = board.getCellByCoords(...point.uv);
             await gameController.clickOnBoard(cell)
+        } else {
+            gameController.unselectPiece();
         }
     });
 
