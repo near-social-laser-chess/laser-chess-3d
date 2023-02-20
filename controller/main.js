@@ -52,22 +52,20 @@ export class GameController {
             return;
         }
 
-        if (this.game.isGameFinished()) {
-            if (this.game.getWinner() === "red")
-                showWinnerMessage("You lose!", "Reload page to restart.")
-            else if (this.game.getWinner() === "blue")
-                showWinnerMessage("You win!", "Reload page to restart.")
-            return;
-        }
-
         await this.makeAIMove();
+    }
 
+    checkGameFinished() {
         if (this.game.isGameFinished()) {
             if (this.game.getWinner() === "red")
                 showWinnerMessage("You lose!", "Reload page to restart.")
             else if (this.game.getWinner() === "blue")
                 showWinnerMessage("You win!", "Reload page to restart.")
+
+            return true;
         }
+
+        return false;
     }
 
     async makeUserMove(cell) {
@@ -195,6 +193,8 @@ export class GameController {
     }
 
     async makeAIMove() {
+        if (this.checkGameFinished()) return;
+
         let aiMovement = this.game.computeAIMovement();
         await this.game.applyMovement(aiMovement);
 
@@ -202,6 +202,7 @@ export class GameController {
         await this.finishMove();
 
         this.game.unlockMovement();
+        this.checkGameFinished();
     }
 
     async rotatePiece(rotateType) {
