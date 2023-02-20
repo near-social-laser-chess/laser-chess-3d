@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import {scene, board} from "./scene.js";
-// import {board} from "./board.js";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
 

@@ -54,7 +54,7 @@ export const initScene = async () => {
 }
 
 export const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20);
-camera.position.set(0, 8, 7);
+camera.position.set(0, 9, 7.5);
 camera.lookAt(0, 0, 0);
 
 board.renderCallbacks = [];
