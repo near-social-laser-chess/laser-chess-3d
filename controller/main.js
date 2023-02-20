@@ -71,11 +71,10 @@ export class GameController {
     async makeUserMove(cell) {
         const location = new Location(cell.col, cell.row)
 
-        if (this.unselectPiece(location)) return false;
-
         const move = this.findHighlightedMove(location)
         if (!move) {
-            this.trySelectPiece(location);
+            if (this.selectPiece(location)) return false;
+            this.unselectPiece(location);
             return false;
         }
 
@@ -87,9 +86,9 @@ export class GameController {
         return true;
     }
 
-    trySelectPiece(location) {
+    selectPiece(location) {
         if (!this.game.selectPiece(location)) {
-            return;
+            return false;
         }
 
         this.unhighlightAllCells();
@@ -115,6 +114,8 @@ export class GameController {
         } else if (!this.game.checkPieceType(location, "k")) {
             enableRotateButtons();
         }
+
+        return true;
     }
 
     unhighlightAllCells() {
@@ -123,10 +124,9 @@ export class GameController {
         disableRotateButtons()
     }
 
-    unselectPiece(location) {
-        if (!this.game.unselectPiece(location)) return false;
+    unselectPiece() {
+        if (!this.game.unselectPiece()) return;
         this.unhighlightAllCells();
-        return true;
     }
 
     findHighlightedMove(location) {

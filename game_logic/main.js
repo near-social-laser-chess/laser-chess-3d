@@ -103,6 +103,7 @@ export class Game {
     }
 
     selectPiece(location) {
+        if (this.selectedPieceLocation !== null && location.an === this.selectedPieceLocation.an) return false;
         const board = new Board({ squares: this.squares });
         const square = board.getSquare(location)
         if (square && square.piece && square.piece.color === "blue") {
@@ -135,13 +136,8 @@ export class Game {
         return !!this.selectedPieceLocation
     }
 
-    unselectPiece(location) {
+    unselectPiece() {
         if (!this.isPieceSelected()) return false;
-
-        if (location.rowIndex !== this.selectedPieceLocation.rowIndex ||
-            location.colIndex !== this.selectedPieceLocation.colIndex) {
-            return false;
-        }
 
         this.selectedPieceLocation = null
         return true;
