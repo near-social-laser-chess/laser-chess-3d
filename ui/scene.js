@@ -50,6 +50,7 @@ export const initScene = async () => {
     // scene.__proto__ = loadedScene.__proto__;
     // boardObj.__proto__ = loadedBoard.__proto__;
     scene = Object.assign(loadedScene, scene);
+    scene.background = new THREE.Color(0xffffff);
     board = Object.assign(loadedBoard, board);
 }
 

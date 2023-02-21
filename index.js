@@ -11,7 +11,7 @@ export let gameController;
 
 export const initGame = async () => {
     await initUI();
-    gameController = new AIGameController(PlayerTypesEnum.BLUE, PlayerTypesEnum.RED);
+    gameController = new OnlineGameController(PlayerTypesEnum.BLUE, PlayerTypesEnum.RED);
 
     document.addEventListener( 'mouseup', async (e) => {
         const point = calculateClickedPoint(e);
