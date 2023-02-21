@@ -1,4 +1,4 @@
-import {GameStatusEnum, PieceTypesEnum, PlayerTypesEnum} from "./models/Enums.js";
+import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums.js";
 import Board from "./models/Board.js";
 import AI from "./utils/ai/AI.js";
 
@@ -7,15 +7,15 @@ const DEFAULT_BOARD_SNS = [
 ]
 
 export class Game {
-    constructor() {
+    constructor(userColor, opponentColor) {
         this.currentPlayer = PlayerTypesEnum.BLUE
+        this.userColor = userColor
+        this.opponentColor  = opponentColor
         this.status = GameStatusEnum.PLAYING
-
         this.selectedPieceLocation = null
         this.movementIsLocked = false
 
         this.ai = {
-            enabled: true,
             movement: null
         }
 
@@ -72,7 +72,7 @@ export class Game {
         const newBoard = new Board({squares: this.squares});
 
         const ai = new AI();
-        const movement = ai.computeMove(newBoard, PlayerTypesEnum.RED);
+        const movement = ai.computeMove(newBoard, this.opponentColor);
         this.ai.movement = movement.serialize();
 
         return this.ai.movement;
@@ -106,7 +106,7 @@ export class Game {
         if (this.selectedPieceLocation !== null && location.an === this.selectedPieceLocation.an) return false;
         const board = new Board({ squares: this.squares });
         const square = board.getSquare(location)
-        if (square && square.piece && square.piece.color === "blue") {
+        if (square && square.piece && square.piece.color === this.userColor) {
             this.selectedPieceLocation = location
             return true;
         }
@@ -156,20 +156,4 @@ export class Game {
     unlockMovement() {
         this.movementIsLocked = false;
     }
-
-    pause () {
-        this.status = GameStatusEnum.PAUSED
-    }
-
-    resume() {
-        this.status = GameStatusEnum.PLAYING;
-    }
-
-    toggleAI() {
-        this.ai.enabled = !this.ai.enabled;
-    }
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
 }
