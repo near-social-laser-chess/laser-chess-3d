@@ -2,12 +2,8 @@ import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums.js";
 import Board from "./models/Board.js";
 import AI from "./utils/ai/AI.js";
 
-const DEFAULT_BOARD_SNS = [
-    "l++3d++kd++b+++2/2b7/3B+6/b++1B1ss+1b+++1B+/b+++1B+1S+S1b++1B/6b+++3/7B++2/2B+DKD3L",
-]
-
 export class Game {
-    constructor(userColor, opponentColor) {
+    constructor(userColor, opponentColor, sn) {
         this.currentPlayer = PlayerTypesEnum.BLUE
         this.userColor = userColor
         this.opponentColor  = opponentColor
@@ -25,7 +21,7 @@ export class Game {
             finalActionType: null
         }
 
-        this.setBoardType()
+        this.setBoardType(sn)
     }
 
     getWinner() {
@@ -37,8 +33,8 @@ export class Game {
         return this.status === GameStatusEnum.GAME_OVER;
     }
 
-    setBoardType() {
-        let newBoard = new Board({}).serialize();
+    setBoardType(sn) {
+        let newBoard = new Board({setupNotation: sn}).serialize();
         this.squares = newBoard.squares;
         this.winner = newBoard.winner;
         this.sn = newBoard.sn;

@@ -65,7 +65,7 @@ class Board {
 
         } else if (options.setupNotation) {
             // If setupNotation is provided parse it and set the parsed squares.
-            this.squares = SN.parse(options.setupNotation);
+            this.squares = SN.parse(BOARD_SNs[options.setupNotation]);
 
         } else {
             // If opts.squares nor opts.setupNotation is provided, use the default (ace) setup notation

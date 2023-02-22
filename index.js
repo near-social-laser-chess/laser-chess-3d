@@ -12,9 +12,9 @@ export let gameController;
 export const initGame = async (gameConfig) => {
     await initUI();
     if (gameConfig.type === "online") {
-        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor);
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.sn);
     } else {
-        gameController = new AIGameController(gameConfig.userColor, gameConfig.opponentColor);
+        gameController = new AIGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.sn);
     }
 
     document.addEventListener( 'mouseup', async (e) => {
@@ -23,11 +23,6 @@ export const initGame = async (gameConfig) => {
             const cell = board.getCellByCoords(...point.uv);
             await gameController.clickOnBoard(cell)
         }
-        /*
-        else {
-            gameController.unselectPiece();
-        }
-         */
     });
 
     document.addEventListener('mousemove', e => {

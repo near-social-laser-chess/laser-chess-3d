@@ -16,8 +16,8 @@ import {HighlightType} from "../ui/board";
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
 
 export class GameController {
-    constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED) {
-        this.game = new Game(userColor, opponentColor)
+    constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED, sn) {
+        this.game = new Game(userColor, opponentColor, sn)
         this.highlightedMoves = []
         this.spawnAllFigures()
 
