@@ -105,7 +105,11 @@
         </div>
     </div>
     <script>
-        window.addEventListener('load', (e) => EntryPoint.initGame())
+        window.addEventListener('load', (e) => EntryPoint.initGame({
+            type: "ai",
+            userColor: "blue",
+            opponentColor: "red",
+        }))
     </script>
 </body>
 </html>

@@ -2,16 +2,20 @@ import {camera, renderer, rotateButtonClockwise,
     rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
 import {board} from "./ui/scene.js";
 import {calculateClickedPoint} from "./controller/utils.js";
-import {MovementTypesEnum, PlayerTypesEnum} from "./game_logic/models/Enums";
+import {MovementTypesEnum} from "./game_logic/models/Enums";
 import {initUI} from "./ui/main";
 import {AIGameController} from "./controller/AIGameController";
 import {OnlineGameController} from "./controller/OnlineGameController";
 
 export let gameController;
 
-export const initGame = async () => {
+export const initGame = async (gameConfig) => {
     await initUI();
-    gameController = new OnlineGameController(PlayerTypesEnum.BLUE, PlayerTypesEnum.RED);
+    if (gameConfig.type === "online") {
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor);
+    } else {
+        gameController = new AIGameController(gameConfig.userColor, gameConfig.opponentColor);
+    }
 
     document.addEventListener( 'mouseup', async (e) => {
         const point = calculateClickedPoint(e);
@@ -23,7 +27,6 @@ export const initGame = async () => {
         else {
             gameController.unselectPiece();
         }
-
          */
     });
 
