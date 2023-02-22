@@ -21,7 +21,13 @@ import LaserPath from "./LaserPath.js";
  * @constant
  * Ace
  */
-const DEFAULT_BOARD_SN = "l++3d++kd++b+++2/2b7/3B+6/b++1B1ss+1b+++1B+/b+++1B+1S+S1b++1B/6b+++3/7B++2/2B+DKD3L";
+const BOARD_SNs = {
+    "Ace": "l++3d++kd++b+++2/2b7/3B+6/b++1B1ss+1b+++1B+/b+++1B+1S+S1b++1B/6b+++3/7B++2/2B+DKD3L",
+    "Curiosity": "l++3d++kd++s+++2/19/3B+2b++3/b++B2B+++s+2b+++B+/b+++B+2S+b+2b++B/3B2b+++3/19/2S+DKD3L",
+    "Grail": "l++3bd++b+++3/5k4/b++3bd++s+3/b+++1s1B+1B+++3/3b+1b+++1S1B+/3S+DB++3B/4K5/3B+DB++3L",
+    "Mercury": "l+3bkb+++2S+/5d++b+++3/b+++2s+1d++4/b++3B+3B1/1b++3b+++3B/4D1S+2B+/3B+D5/s+2B+KB++3L+++",
+    "Sophie": "l++3kB+b+++3/3d++1d+3B/b++3bb+++1S+1B+/7s2/2S7/b+++1s+1B+B++3B/b++3D+++1D3/3B+b+++K3L",
+}
 
 /**
  * @constant
@@ -63,12 +69,18 @@ class Board {
 
         } else {
             // If opts.squares nor opts.setupNotation is provided, use the default (ace) setup notation
-            this.squares = SN.parse(DEFAULT_BOARD_SN);
+            this.squares = SN.parse(this.getRandomSN());
         }
 
         this.winner = null;
     }
 
+    getRandomSN() {
+        const sns = ["Ace", "Curiosity", "Grail", "Mercury", "Sophie"]
+        const random_sns_id = Math.floor(Math.random() * 5)
+        const random_sns = sns[random_sns_id]
+        return BOARD_SNs[random_sns]
+    }
 
     /**
      * Get a square from the the current board that is at the specified location
