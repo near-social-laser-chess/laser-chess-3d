@@ -21,7 +21,7 @@ import LaserPath from "./LaserPath.js";
  * @constant
  * Ace
  */
-const BOARD_SNs = {
+export const BOARD_SNs = {
     "Ace": "l++3d++kd++b+++2/2b7/3B+6/b++1B1ss+1b+++1B+/b+++1B+1S+S1b++1B/6b+++3/7B++2/2B+DKD3L",
     "Curiosity": "l++3d++kd++s+++2/19/3B+2b++3/b++B2B+++s+2b+++B+/b+++B+2S+b+2b++B/3B2b+++3/19/2S+DKD3L",
     "Grail": "l++3bd++b+++3/5k4/b++3bd++s+3/b+++1s1B+1B+++3/3b+1b+++1S1B+/3S+DB++3B/4K5/3B+DB++3L",
@@ -65,8 +65,6 @@ class Board {
         } else if (options.setupNotation) {
             // If setupNotation is provided parse it and set the parsed squares.
             this.squares = SN.parse(options.setupNotation);
-        } else if (options.setupNotationName) {
-            this.squares = SN.parse(BOARD_SNs[options.setupNotationName]);
         } else {
             // If opts.squares nor opts.setupNotation is provided, use the default (ace) setup notation
             this.squares = SN.parse(this.getRandomSN());

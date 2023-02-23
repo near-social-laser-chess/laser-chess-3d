@@ -108,7 +108,10 @@
         window.addEventListener('load', (e) => EntryPoint.initGame({
             type: "ai",
             userColor: "blue",
-            opponentColor: "red",
+            opponent: {
+                opponentColor: "red",
+                opponentId: "",
+            },
 
             // "Ace", "Curiosity", "Grail", "Mercury", "Sophie". Random - do not specify this field at all
             sn: "Curiosity",

@@ -3,13 +3,15 @@ import Board from "./models/Board.js";
 import AI from "./utils/ai/AI.js";
 
 export class Game {
-    constructor(userColor, opponentColor, sn) {
-        this.currentPlayer = PlayerTypesEnum.BLUE
+    constructor(userColor, opponent, currentPlayer, sn, numberOfMoves) {
+        this.currentPlayer = currentPlayer
         this.userColor = userColor
-        this.opponentColor  = opponentColor
+        this.opponent  = opponent
+        this.numberOfMoves = numberOfMoves
         this.status = GameStatusEnum.PLAYING
         this.selectedPieceLocation = null
         this.movementIsLocked = false
+        this.lastMove = null
 
         this.ai = {
             movement: null
@@ -33,7 +35,7 @@ export class Game {
     }
 
     setBoardType(sn) {
-        let newBoard = new Board({setupNotationName: sn}).serialize();
+        let newBoard = new Board({setupNotation: sn}).serialize();
         this.squares = newBoard.squares;
         this.winner = newBoard.winner;
         this.sn = newBoard.sn;
@@ -61,12 +63,13 @@ export class Game {
         }
 
         this.selectedPieceLocation = null;
+        this.lastMove = movement;
     }
 
     computeAIMovement() {
         const newBoard = new Board({squares: this.squares});
         const ai = new AI();
-        const movement = ai.computeMove(newBoard, this.opponentColor);
+        const movement = ai.computeMove(newBoard, this.opponent.opponentColor);
         this.ai.movement = movement.serialize();
 
         return this.ai.movement;
@@ -80,7 +83,7 @@ export class Game {
         this.winner = serializedBoard.winner
         this.sn = serializedBoard.sn
         this.squares = serializedBoard.squares
-
+        this.numberOfMoves += 1
         // Check if game over
         if (serializedBoard.winner) {
             // If game is over, then keep the movement locked and show who won in the UI.
