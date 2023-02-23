@@ -30,7 +30,8 @@ module.exports = (env, argv) => {
             }),
             new CopyWebpackPlugin({
                 patterns: [
-                    {from: "assets", to: "assets"}
+                    {from: "assets", to: "assets"},
+                    {from: path.resolve(__dirname, 'public', 'css'), to: 'css'},
                 ],
             }),
             new webpack.DefinePlugin({
