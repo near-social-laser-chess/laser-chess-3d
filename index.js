@@ -2,29 +2,36 @@ import {camera, renderer, rotateButtonClockwise,
     rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
 import {board} from "./ui/scene.js";
 import {calculateClickedPoint} from "./controller/utils.js";
-import {MovementTypesEnum, PlayerTypesEnum} from "./game_logic/models/Enums";
+import {MovementTypesEnum} from "./game_logic/models/Enums";
 import {initUI} from "./ui/main";
 import {AIGameController} from "./controller/AIGameController";
 import {OnlineGameController} from "./controller/OnlineGameController";
+import {BOARD_SNs} from "./game_logic/models/Board";
 
 export let gameController;
 
-export const initGame = async () => {
+export const initGame = async (gameConfig, callback) => {
     await initUI();
-    gameController = new OnlineGameController(PlayerTypesEnum.BLUE, PlayerTypesEnum.RED);
+    let sn = null;
+    if (gameConfig.sn) {
+        sn =  BOARD_SNs[gameConfig.sn]
+    }
+
+    if (gameConfig.type === "online") {
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponent, sn);
+    } else {
+        gameController = new AIGameController(gameConfig.userColor, gameConfig.opponent, sn);
+    }
 
     document.addEventListener( 'mouseup', async (e) => {
         const point = calculateClickedPoint(e);
         if (point) {
             const cell = board.getCellByCoords(...point.uv);
-            await gameController.clickOnBoard(cell)
+            const data = await gameController.clickOnBoard(cell)
+            if (callback instanceof Function) {
+                callback(data)
+            }
         }
-        /*
-        else {
-            gameController.unselectPiece();
-        }
-
-         */
     });
 
     document.addEventListener('mousemove', e => {
@@ -42,10 +49,18 @@ export const initGame = async () => {
     });
 
     rotateButtonCounterClockwise.addEventListener('click', async () => {
-        await gameController.rotatePiece(MovementTypesEnum.ROTATION_C_CLOCKWISE);
+        const data = await gameController.rotatePiece(MovementTypesEnum.ROTATION_C_CLOCKWISE);
+
+        if (callback instanceof Function) {
+            callback(data)
+        }
     });
 
     rotateButtonClockwise.addEventListener('click', async () => {
-        await gameController.rotatePiece(MovementTypesEnum.ROTATION_CLOCKWISE);
+        const data = await gameController.rotatePiece(MovementTypesEnum.ROTATION_CLOCKWISE);
+
+        if (callback instanceof Function) {
+            callback(data)
+        }
     });
 }

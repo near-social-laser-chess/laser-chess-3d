@@ -16,13 +16,13 @@ import {HighlightType} from "../ui/board";
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
 
 export class GameController {
-    constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED) {
-        this.game = new Game(userColor, opponentColor)
+    constructor(userColor, opponent, currentPlayer, sn, numberOfMoves) {
+        this.game = new Game(userColor, opponent, currentPlayer, sn, numberOfMoves)
         this.highlightedMoves = []
         this.spawnAllFigures()
 
         if (userColor === PlayerTypesEnum.RED) {
-            this.makeOpponentMove();
+            this.passMoveToOpponent();
         }
     }
 
@@ -55,8 +55,10 @@ export class GameController {
             return;
         }
 
-        await this.makeOpponentMove();
+        const data = await this.passMoveToOpponent();
         this.game.unlockMovement();
+
+        return data;
     }
 
     checkGameFinished() {
@@ -196,8 +198,7 @@ export class GameController {
         return laserPath;
     }
 
-    async makeOpponentMove() {
-    }
+    async passMoveToOpponent() { }
 
     async rotatePiece(rotateType) {
         if (this.game.movementIsLocked || this.game.isGameFinished()) return;
@@ -215,7 +216,9 @@ export class GameController {
         await this.makeMove(move);
         await this.finishMove();
 
-        await this.makeOpponentMove();
+        const data = await this.passMoveToOpponent();
         this.game.unlockMovement();
+
+        return data;
     }
 }

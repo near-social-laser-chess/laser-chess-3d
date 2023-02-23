@@ -2,18 +2,16 @@ import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums.js";
 import Board from "./models/Board.js";
 import AI from "./utils/ai/AI.js";
 
-const DEFAULT_BOARD_SNS = [
-    "l++3d++kd++b+++2/2b7/3B+6/b++1B1ss+1b+++1B+/b+++1B+1S+S1b++1B/6b+++3/7B++2/2B+DKD3L",
-]
-
 export class Game {
-    constructor(userColor, opponentColor) {
-        this.currentPlayer = PlayerTypesEnum.BLUE
+    constructor(userColor, opponent, currentPlayer, sn, numberOfMoves) {
+        this.currentPlayer = currentPlayer
         this.userColor = userColor
-        this.opponentColor  = opponentColor
+        this.opponent  = opponent
+        this.numberOfMoves = numberOfMoves
         this.status = GameStatusEnum.PLAYING
         this.selectedPieceLocation = null
         this.movementIsLocked = false
+        this.lastMove = null
 
         this.ai = {
             movement: null
@@ -25,7 +23,7 @@ export class Game {
             finalActionType: null
         }
 
-        this.setBoardType()
+        this.setBoardType(sn)
     }
 
     getWinner() {
@@ -33,12 +31,11 @@ export class Game {
     }
 
     isGameFinished() {
-        console.log(this.status)
         return this.status === GameStatusEnum.GAME_OVER;
     }
 
-    setBoardType() {
-        let newBoard = new Board({}).serialize();
+    setBoardType(sn) {
+        let newBoard = new Board({setupNotation: sn}).serialize();
         this.squares = newBoard.squares;
         this.winner = newBoard.winner;
         this.sn = newBoard.sn;
@@ -66,13 +63,13 @@ export class Game {
         }
 
         this.selectedPieceLocation = null;
+        this.lastMove = movement;
     }
 
     computeAIMovement() {
         const newBoard = new Board({squares: this.squares});
-
         const ai = new AI();
-        const movement = ai.computeMove(newBoard, this.opponentColor);
+        const movement = ai.computeMove(newBoard, this.opponent.opponentColor);
         this.ai.movement = movement.serialize();
 
         return this.ai.movement;
@@ -86,7 +83,7 @@ export class Game {
         this.winner = serializedBoard.winner
         this.sn = serializedBoard.sn
         this.squares = serializedBoard.squares
-
+        this.numberOfMoves += 1
         // Check if game over
         if (serializedBoard.winner) {
             // If game is over, then keep the movement locked and show who won in the UI.
