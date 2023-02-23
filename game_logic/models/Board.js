@@ -62,11 +62,11 @@ class Board {
         if (options.squares) {
             // If squares is provided, prioritize this
             this.squares = options.squares;
-
         } else if (options.setupNotation) {
             // If setupNotation is provided parse it and set the parsed squares.
-            this.squares = SN.parse(BOARD_SNs[options.setupNotation]);
-
+            this.squares = SN.parse(options.setupNotation);
+        } else if (options.setupNotationName) {
+            this.squares = SN.parse(BOARD_SNs[options.setupNotationName]);
         } else {
             // If opts.squares nor opts.setupNotation is provided, use the default (ace) setup notation
             this.squares = SN.parse(this.getRandomSN());
@@ -106,7 +106,6 @@ class Board {
      */
     getPlayerSquares(player) {
         // flatten all rows into a single array
-        // console.log(board);
         const flattenedSquares = flatMap(this.squares);
         return flattenedSquares.filter((square) => {
             // Filter out the squares with no pieces in it.
@@ -572,7 +571,6 @@ class Board {
                 sn += "\n"; // separates the rows
             }
         });
-        console.log(sn);
     }
 
     /**

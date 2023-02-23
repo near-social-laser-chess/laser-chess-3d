@@ -1,4 +1,3 @@
-import {Game} from '../game_logic/main.js'
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
 import {GameController} from "./GameController";
 
@@ -7,7 +6,7 @@ export class AIGameController extends GameController {
         super(userColor, opponentColor, sn);
     }
 
-    async makeOpponentMove() {
+    async passMoveToOpponent() {
         if (this.checkGameFinished()) return;
 
         let aiMovement = this.game.computeAIMovement();
@@ -15,7 +14,6 @@ export class AIGameController extends GameController {
 
         await this.makeMove(aiMovement);
         await this.finishMove();
-
         this.checkGameFinished();
     }
 }

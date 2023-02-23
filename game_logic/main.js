@@ -29,12 +29,11 @@ export class Game {
     }
 
     isGameFinished() {
-        console.log(this.status)
         return this.status === GameStatusEnum.GAME_OVER;
     }
 
     setBoardType(sn) {
-        let newBoard = new Board({setupNotation: sn}).serialize();
+        let newBoard = new Board({setupNotationName: sn}).serialize();
         this.squares = newBoard.squares;
         this.winner = newBoard.winner;
         this.sn = newBoard.sn;
@@ -66,7 +65,6 @@ export class Game {
 
     computeAIMovement() {
         const newBoard = new Board({squares: this.squares});
-
         const ai = new AI();
         const movement = ai.computeMove(newBoard, this.opponentColor);
         this.ai.movement = movement.serialize();

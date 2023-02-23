@@ -22,7 +22,7 @@ export class GameController {
         this.spawnAllFigures()
 
         if (userColor === PlayerTypesEnum.RED) {
-            this.makeOpponentMove();
+            this.passMoveToOpponent();
         }
     }
 
@@ -55,7 +55,7 @@ export class GameController {
             return;
         }
 
-        await this.makeOpponentMove();
+        await this.passMoveToOpponent();
         this.game.unlockMovement();
     }
 
@@ -196,8 +196,7 @@ export class GameController {
         return laserPath;
     }
 
-    async makeOpponentMove() {
-    }
+    async passMoveToOpponent() { }
 
     async rotatePiece(rotateType) {
         if (this.game.movementIsLocked || this.game.isGameFinished()) return;
@@ -215,7 +214,7 @@ export class GameController {
         await this.makeMove(move);
         await this.finishMove();
 
-        await this.makeOpponentMove();
+        await this.passMoveToOpponent();
         this.game.unlockMovement();
     }
 }
