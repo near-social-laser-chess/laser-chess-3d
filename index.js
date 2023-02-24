@@ -59,3 +59,8 @@ export const initGame = async (gameConfig, callback) => {
         }
     });
 }
+
+export const makeMove = async (data) => {
+    if (!(gameController instanceof OnlineGameController)) throw new Error("");
+    await gameController.displayMove(data);
+}
