@@ -51,7 +51,7 @@ export class GameController {
     }
 
     async clickOnBoard(cell) {
-        if (this.game.movementIsLocked || this.game.isGameFinished()) return;
+        if (this.game.movementIsLocked || this.checkGameFinished()) return;
 
         this.game.lockMovement();
         const isUserMakeMove = await this.makeUserMove(cell);
@@ -68,9 +68,9 @@ export class GameController {
 
     checkGameFinished() {
         if (this.game.isGameFinished()) {
-            if (this.game.getWinner() === "red")
+            if (this.game.getWinner() !== this.game.userColor)
                 showWinnerMessage("You lose!", "Reload page to restart.")
-            else if (this.game.getWinner() === "blue")
+            else
                 showWinnerMessage("You win!", "Reload page to restart.")
 
             return true;

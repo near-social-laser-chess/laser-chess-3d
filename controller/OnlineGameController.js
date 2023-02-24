@@ -11,6 +11,8 @@ export class OnlineGameController extends GameController {
     }
 
     async passMoveToOpponent() {
+        this.checkGameFinished();
+
         const type = this.game.lastMove.type;
         const srcLocation = this.game.lastMove.srcLocation;
         const destLocation = this.game.lastMove.destLocation;
@@ -67,6 +69,6 @@ export class OnlineGameController extends GameController {
     }
 
     async displayUserMove(data) {
-
+        this.checkGameFinished();
     }
 }
