@@ -1,5 +1,5 @@
 import {Game} from '../game_logic/main.js'
-import {board} from "../ui/scene.js";
+import {board, camera} from "../ui/scene.js";
 import {
     disableRotateButtons,
     enableRotateButtonClockwise,
@@ -17,6 +17,10 @@ import {PlayerTypesEnum} from "../game_logic/models/Enums";
 
 export class GameController {
     constructor(userColor, opponent, currentPlayer, sn, numberOfMoves) {
+        if (userColor === "red") {
+            camera.position.z *= -1;
+        }
+
         this.game = new Game(userColor, opponent, currentPlayer, sn, numberOfMoves)
         this.highlightedMoves = []
         this.spawnAllFigures()
