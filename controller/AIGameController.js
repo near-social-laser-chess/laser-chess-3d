@@ -3,7 +3,7 @@ import {GameController} from "./GameController";
 
 export class AIGameController extends GameController {
     constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED, sn = null) {
-        super(userColor, opponentColor, sn, 0);
+        super(userColor, opponentColor, sn, "blue", 0);
     }
 
     async passMoveToOpponent() {

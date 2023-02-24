@@ -16,11 +16,12 @@ import {HighlightType} from "../ui/board";
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
 
 export class GameController {
-    constructor(userColor, opponent, currentPlayer, sn, numberOfMoves) {
+    constructor(userColor, opponent, sn, currentPlayer, numberOfMoves) {
         if (userColor === "red") {
             camera.position.z *= -1;
         }
 
+        console.log(currentPlayer)
         this.game = new Game(userColor, opponent, currentPlayer, sn, numberOfMoves)
         this.highlightedMoves = []
         this.spawnAllFigures()
@@ -116,10 +117,18 @@ export class GameController {
 
         if (this.game.checkPieceType(location, "l")) {
             const laserOrientation = this.game.getCellOrientation(location);
-            if (laserOrientation === 0) {
-                enableRotateButtonCounterClockwise()
+            if (this.game.userColor === "blue") {
+                if (laserOrientation === 0) {
+                    enableRotateButtonCounterClockwise()
+                } else {
+                    enableRotateButtonClockwise();
+                }
             } else {
-                enableRotateButtonClockwise();
+                if (laserOrientation === 180) {
+                    enableRotateButtonCounterClockwise()
+                } else {
+                    enableRotateButtonClockwise();
+                }
             }
         } else if (!this.game.checkPieceType(location, "k")) {
             enableRotateButtons();

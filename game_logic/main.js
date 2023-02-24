@@ -49,6 +49,7 @@ export class Game {
         const newBoard = new Board({squares: this.squares});
 
         newBoard.applyMovement(movement);
+        console.log(this.currentPlayer)
         const route = await newBoard.getLaserRoute(this.currentPlayer);
 
         this.laser.triggered = true;

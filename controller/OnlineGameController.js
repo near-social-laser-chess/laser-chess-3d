@@ -6,7 +6,7 @@ export class OnlineGameController extends GameController {
     constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = {
         opponentColor: PlayerTypesEnum.RED,
         opponentId: ""
-    }, currentPlayer = PlayerTypesEnum.BLUE, sn = null, numberOfMoves = 0) {
+    }, sn = null, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
         super(userColor, opponentColor, currentPlayer, sn, numberOfMoves);
     }
 
