@@ -7,7 +7,7 @@ export class OnlineGameController extends GameController {
         opponentColor: PlayerTypesEnum.RED,
         opponentId: ""
     }, sn = null, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
-        super(userColor, opponentColor, currentPlayer, sn, numberOfMoves);
+        super(sn, userColor, opponentColor, currentPlayer, numberOfMoves);
     }
 
     async passMoveToOpponent() {
@@ -58,17 +58,13 @@ export class OnlineGameController extends GameController {
     }
     */
 
-    async displayOpponentMove(data) {
-        const opponentMove = new Movement(data.lastMove.type, data.lastMove.srcLocation, data.lastMove.destLocation);
-        await this.game.applyMovement(opponentMove);
+    async displayMove(data) {
+        const move = new Movement(data.lastMove.type, data.lastMove.srcLocation, data.lastMove.destLocation);
+        await this.game.applyMovement(move);
 
-        await this.makeMove(opponentMove);
+        await this.makeMove(move);
         await this.finishMove();
 
-        this.checkGameFinished();
-    }
-
-    async displayUserMove(data) {
         this.checkGameFinished();
     }
 }

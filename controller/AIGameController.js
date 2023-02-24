@@ -1,9 +1,8 @@
-import {PlayerTypesEnum} from "../game_logic/models/Enums";
 import {GameController} from "./GameController";
 
 export class AIGameController extends GameController {
-    constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED, sn = null) {
-        super(userColor, opponentColor, sn, "blue", 0);
+    constructor(sn = null) {
+        super(sn);
     }
 
     async passMoveToOpponent() {

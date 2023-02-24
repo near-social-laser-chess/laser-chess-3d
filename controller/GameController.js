@@ -16,7 +16,10 @@ import {HighlightType} from "../ui/board";
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
 
 export class GameController {
-    constructor(userColor, opponent, sn, currentPlayer, numberOfMoves) {
+    constructor(sn, userColor = PlayerTypesEnum.BLUE, opponent = {
+                opponentColor: "red",
+                opponentId: "",
+            }, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
         if (userColor === "red") {
             camera.position.z *= -1;
         }

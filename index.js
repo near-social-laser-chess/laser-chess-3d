@@ -6,21 +6,16 @@ import {MovementTypesEnum} from "./game_logic/models/Enums";
 import {initUI} from "./ui/main";
 import {AIGameController} from "./controller/AIGameController";
 import {OnlineGameController} from "./controller/OnlineGameController";
-import {BOARD_SNs} from "./game_logic/models/Board";
 
 export let gameController;
 
 export const initGame = async (gameConfig, callback) => {
     await initUI();
-    let sn = null;
-    if (gameConfig.sn) {
-        sn =  BOARD_SNs[gameConfig.sn]
-    }
 
     if (gameConfig.type === "online") {
-        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponent, sn);
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponent, gameConfig.sn);
     } else {
-        gameController = new AIGameController(gameConfig.userColor, gameConfig.opponent, sn);
+        gameController = new AIGameController(gameConfig.sn);
     }
 
     document.addEventListener( 'mouseup', async (e) => {
