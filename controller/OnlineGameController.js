@@ -11,6 +11,7 @@ export class OnlineGameController extends GameController {
 
     async passMoveToOpponent() {
         this.checkGameFinished();
+        if (!this.game.lastMove) return {};
 
         const type = this.game.lastMove.type;
         const srcLocation = this.game.lastMove.srcLocation;
@@ -55,6 +56,7 @@ export class OnlineGameController extends GameController {
     */
 
     async displayMove(data) {
+        console.log(data)
         const move = new Movement(data.lastMove.type, data.lastMove.srcLocation, data.lastMove.destLocation);
         await this.game.applyMovement(move);
 
