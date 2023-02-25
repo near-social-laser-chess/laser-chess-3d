@@ -61,6 +61,6 @@ export const initGame = async (gameConfig, callback) => {
 }
 
 export const makeMove = async (data) => {
-    if (!(gameController instanceof OnlineGameController)) throw new Error("");
+    if (!(gameController instanceof OnlineGameController)) throw new Error("Must be online");
     await gameController.displayMove(data);
 }
