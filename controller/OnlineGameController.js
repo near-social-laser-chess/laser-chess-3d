@@ -4,7 +4,8 @@ import Movement from "../game_logic/models/Movement";
 
 export class OnlineGameController extends GameController {
     constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED
-    , sn = null, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
+    , sn = null, currentPlayer, numberOfMoves = 0) {
+        if (!currentPlayer) currentPlayer = PlayerTypesEnum.BLUE;
         super(sn, userColor, opponentColor, currentPlayer, numberOfMoves);
     }
 

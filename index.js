@@ -13,7 +13,7 @@ export const initGame = async (gameConfig, callback) => {
     await initUI();
 
     if (gameConfig.type === "online") {
-        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.currentPlayer, gameConfig.sn);
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.sn, gameConfig.currentPlayer);
     } else {
         gameController = new AIGameController(gameConfig.sn);
     }
