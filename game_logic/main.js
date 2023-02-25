@@ -42,17 +42,27 @@ export class Game {
     setBoardType(sn) {
         let newBoard = new Board({setupNotation: sn}).serialize();
 
-        if (newBoard.winner ) {
-            this.movementIsLocked = true;
+        const redIndex = newBoard.sn.indexOf("k");
+        const blueIndex = newBoard.sn.indexOf("K");
+
+        if(redIndex === -1 || blueIndex === -1) {
             this.status = GameStatusEnum.GAME_OVER;
-            if (this.currentPlayer === newBoard.winner)
-                showWinnerMessage("You win!", "Reload page to restart.")
-            else
-                showWinnerMessage("You win!", "Reload page to restart.")
+            this.movementIsLocked = true;
+
+            if (redIndex === -1) {
+                this.winner = "blue";
+            } else {
+                this.winner = "red";
+            }
+
+            if (this.winner === "blue" && this.userColor === "blue" || this.winner === "red" && this.userColor === "red") {
+                showWinnerMessage("You lose!")
+            } else {
+                showWinnerMessage("You win!")
+            }
         }
 
         this.squares = newBoard.squares;
-        this.winner = newBoard.winner;
         this.sn = newBoard.sn;
    }
 
