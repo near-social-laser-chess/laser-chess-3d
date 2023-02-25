@@ -42,8 +42,8 @@ export class Game {
     setBoardType(sn) {
         let newBoard = new Board({setupNotation: sn}).serialize();
 
-        const redIndex = newBoard.sn.indexOf("k");
-        const blueIndex = newBoard.sn.indexOf("K");
+        let redIndex = newBoard.sn.indexOf("k");
+        let blueIndex = newBoard.sn.indexOf("K");
 
         if(redIndex === -1 || blueIndex === -1) {
             this.status = GameStatusEnum.GAME_OVER;
@@ -56,9 +56,9 @@ export class Game {
             }
 
             if (this.winner === "blue" && this.userColor === "blue" || this.winner === "red" && this.userColor === "red") {
-                showWinnerMessage("You lose!")
-            } else {
                 showWinnerMessage("You win!")
+            } else {
+                showWinnerMessage("You lose!")
             }
         }
 
