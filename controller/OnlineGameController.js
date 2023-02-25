@@ -50,10 +50,7 @@ export class OnlineGameController extends GameController {
         },
         "numberOfMoves": "0",
         "userColor": "blue",
-        "opponentColor": {
-            "account_id": "test2.testnet",
-            "color": "red",
-        },
+        "opponentColor": "red",
     }
     */
 

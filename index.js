@@ -23,7 +23,7 @@ export const initGame = async (gameConfig, callback) => {
         if (point) {
             const cell = board.getCellByCoords(...point.uv);
             const data = await gameController.clickOnBoard(cell)
-            if (callback instanceof Function) {
+            if (data && callback instanceof Function) {
                 callback(data)
             }
         }
