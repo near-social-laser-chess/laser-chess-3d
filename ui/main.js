@@ -8,7 +8,7 @@ const winnerMessageInfo = document.querySelector("#winner-message__info");
 
 export const showWinnerMessage = (header, info) => {
     winnerMessageHeader.innerHTML = header;
-    winnerMessageInfo.innerHTML = info;
+    //winnerMessageInfo.innerHTML = info;
     winnerMessage.style.visibility = "visible";
 }
 
