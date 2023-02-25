@@ -16,16 +16,13 @@ import {HighlightType} from "../ui/board";
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
 
 export class GameController {
-    constructor(sn, userColor = PlayerTypesEnum.BLUE, opponent = {
-                opponentColor: "red",
-                opponentId: "",
-            }, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
+    constructor(sn, userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
         if (userColor === "red") {
             camera.position.z *= -1;
         }
 
         console.log(currentPlayer)
-        this.game = new Game(userColor, opponent, currentPlayer, sn, numberOfMoves)
+        this.game = new Game(userColor, opponentColor, currentPlayer, sn, numberOfMoves)
         this.highlightedMoves = []
         this.spawnAllFigures()
 

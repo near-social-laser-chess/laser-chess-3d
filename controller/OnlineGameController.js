@@ -3,10 +3,8 @@ import {GameController} from "./GameController";
 import Movement from "../game_logic/models/Movement";
 
 export class OnlineGameController extends GameController {
-    constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = {
-        opponentColor: PlayerTypesEnum.RED,
-        opponentId: ""
-    }, sn = null, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
+    constructor(userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED
+    , sn = null, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
         super(sn, userColor, opponentColor, currentPlayer, numberOfMoves);
     }
 
@@ -24,14 +22,14 @@ export class OnlineGameController extends GameController {
         const sn = this.game.sn;
         const numberOfMoves = this.game.numberOfMoves;
         const userColor = this.game.userColor;
-        const opponent = this.game.opponent;
+        const opponentColor = this.game.opponentColor;
 
         return {
             sn,
             lastMove,
             numberOfMoves,
             userColor,
-            opponent,
+            opponentColor,
         }
     }
 
@@ -51,7 +49,7 @@ export class OnlineGameController extends GameController {
         },
         "numberOfMoves": "0",
         "userColor": "blue",
-        "opponent": {
+        "opponentColor": {
             "account_id": "test2.testnet",
             "color": "red",
         },

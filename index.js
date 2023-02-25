@@ -1,5 +1,5 @@
 import {camera, renderer, rotateButtonClockwise,
-    rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
+    rotateButtonCounterClockwise} from "./ui/scene.js";
 import {board} from "./ui/scene.js";
 import {calculateClickedPoint} from "./controller/utils.js";
 import {MovementTypesEnum} from "./game_logic/models/Enums";
@@ -13,7 +13,7 @@ export const initGame = async (gameConfig, callback) => {
     await initUI();
 
     if (gameConfig.type === "online") {
-        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponent, gameConfig.sn);
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.sn);
     } else {
         gameController = new AIGameController(gameConfig.sn);
     }
