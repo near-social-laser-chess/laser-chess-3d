@@ -63,6 +63,7 @@ export class OnlineGameController extends GameController {
         await this.makeMove(move);
         await this.finishMove();
 
+        this.game.unlockMovement();
         this.checkGameFinished();
     }
 }

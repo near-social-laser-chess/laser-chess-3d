@@ -13,6 +13,8 @@ export class AIGameController extends GameController {
 
         await this.makeMove(aiMovement);
         await this.finishMove();
+
+        this.game.unlockMovement();
         this.checkGameFinished();
 
         return {}

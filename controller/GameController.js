@@ -1,12 +1,13 @@
 import {Game} from '../game_logic/main.js'
-import {board, camera} from "../ui/scene.js";
 import {
+    animate,
+    board,
+    camera,
     disableRotateButtons,
     enableRotateButtonClockwise,
     enableRotateButtonCounterClockwise,
     enableRotateButtons
 } from "../ui/scene.js";
-import {animate} from "../ui/scene.js";
 import {getPieceName} from "./utils.js";
 import {spawnPiece} from "../ui/spawn.js";
 import Location from "../game_logic/models/Location.js";
@@ -60,10 +61,7 @@ export class GameController {
             return;
         }
 
-        const data = await this.passMoveToOpponent();
-        this.game.unlockMovement();
-
-        return data;
+        return await this.passMoveToOpponent();
     }
 
     checkGameFinished() {
