@@ -3,10 +3,10 @@ import Board from "./models/Board.js";
 import AI from "./utils/ai/AI.js";
 
 export class Game {
-    constructor(userColor, opponent, currentPlayer, sn, numberOfMoves) {
+    constructor(userColor, opponentColor, currentPlayer, sn, numberOfMoves) {
         this.currentPlayer = currentPlayer
         this.userColor = userColor
-        this.opponent  = opponent
+        this.opponentColor  = opponentColor
         this.numberOfMoves = numberOfMoves
         this.status = GameStatusEnum.PLAYING
         this.selectedPieceLocation = null
@@ -70,7 +70,7 @@ export class Game {
     computeAIMovement() {
         const newBoard = new Board({squares: this.squares});
         const ai = new AI();
-        const movement = ai.computeMove(newBoard, this.opponent.opponentColor);
+        const movement = ai.computeMove(newBoard, this.opponentColor);
         this.ai.movement = movement.serialize();
 
         return this.ai.movement;

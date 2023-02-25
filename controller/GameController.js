@@ -1,12 +1,13 @@
 import {Game} from '../game_logic/main.js'
-import {board, camera} from "../ui/scene.js";
 import {
+    animate,
+    board,
+    camera,
     disableRotateButtons,
     enableRotateButtonClockwise,
     enableRotateButtonCounterClockwise,
     enableRotateButtons
 } from "../ui/scene.js";
-import {animate} from "../ui/scene.js";
 import {getPieceName} from "./utils.js";
 import {spawnPiece} from "../ui/spawn.js";
 import Location from "../game_logic/models/Location.js";
@@ -16,16 +17,13 @@ import {HighlightType} from "../ui/board";
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
 
 export class GameController {
-    constructor(sn, userColor = PlayerTypesEnum.BLUE, opponent = {
-                opponentColor: "red",
-                opponentId: "",
-            }, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
+    constructor(sn, userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
         if (userColor === "red") {
             camera.position.z *= -1;
         }
 
         console.log(currentPlayer)
-        this.game = new Game(userColor, opponent, currentPlayer, sn, numberOfMoves)
+        this.game = new Game(userColor, opponentColor, currentPlayer, sn, numberOfMoves)
         this.highlightedMoves = []
         this.spawnAllFigures()
 
@@ -63,10 +61,7 @@ export class GameController {
             return;
         }
 
-        const data = await this.passMoveToOpponent();
-        this.game.unlockMovement();
-
-        return data;
+        return await this.passMoveToOpponent();
     }
 
     checkGameFinished() {

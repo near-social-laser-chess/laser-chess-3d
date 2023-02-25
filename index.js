@@ -1,5 +1,5 @@
 import {camera, renderer, rotateButtonClockwise,
-    rotateButtonCounterClockwise, disableRotateButtons} from "./ui/scene.js";
+    rotateButtonCounterClockwise} from "./ui/scene.js";
 import {board} from "./ui/scene.js";
 import {calculateClickedPoint} from "./controller/utils.js";
 import {MovementTypesEnum} from "./game_logic/models/Enums";
@@ -13,7 +13,7 @@ export const initGame = async (gameConfig, callback) => {
     await initUI();
 
     if (gameConfig.type === "online") {
-        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponent, gameConfig.sn);
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.sn, gameConfig.currentPlayer, gameConfig.numberOfMoves);
     } else {
         gameController = new AIGameController(gameConfig.sn);
     }
@@ -23,7 +23,7 @@ export const initGame = async (gameConfig, callback) => {
         if (point) {
             const cell = board.getCellByCoords(...point.uv);
             const data = await gameController.clickOnBoard(cell)
-            if (callback instanceof Function) {
+            if (data && callback instanceof Function) {
                 callback(data)
             }
         }
@@ -61,6 +61,6 @@ export const initGame = async (gameConfig, callback) => {
 }
 
 export const makeMove = async (data) => {
-    if (!(gameController instanceof OnlineGameController)) throw new Error("");
+    if (!(gameController instanceof OnlineGameController)) throw new Error("Must be online");
     await gameController.displayMove(data);
 }
