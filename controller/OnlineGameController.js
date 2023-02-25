@@ -56,6 +56,14 @@ export class OnlineGameController extends GameController {
     */
 
     async displayMove(data) {
+        data.lastMove.srcLocation.rowIndex = Number(data.lastMove.srcLocation.rowIndex)
+        data.lastMove.srcLocation.row = Number(data.lastMove.srcLocation.row)
+        data.lastMove.srcLocation.colIndex = Number(data.lastMove.srcLocation.colIndex)
+
+        data.lastMove.destLocation.rowIndex = Number(data.lastMove.destLocation.rowIndex)
+        data.lastMove.destLocation.row = Number(data.lastMove.destLocation.row)
+        data.lastMove.destLocation.colIndex = Number(data.lastMove.destLocation.colIndex)
+
         console.log(data)
         const move = new Movement(data.lastMove.type, data.lastMove.srcLocation, data.lastMove.destLocation);
         await this.game.applyMovement(move);
