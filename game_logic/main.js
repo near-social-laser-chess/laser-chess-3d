@@ -13,6 +13,10 @@ export class Game {
         this.movementIsLocked = false
         this.lastMove = null
 
+        if (currentPlayer !== userColor) {
+            this.movementIsLocked = true;
+        }
+
         this.ai = {
             movement: null
         }
