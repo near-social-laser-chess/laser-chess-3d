@@ -67,9 +67,9 @@ export class GameController {
     checkGameFinished() {
         if (this.game.isGameFinished()) {
             if (this.game.getWinner() !== this.game.userColor)
-                showWinnerMessage("You lose!", "Reload page to restart.")
+                showWinnerMessage("You lose!")
             else
-                showWinnerMessage("You win!", "Reload page to restart.")
+                showWinnerMessage("You win!")
 
             return true;
         }

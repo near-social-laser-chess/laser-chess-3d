@@ -13,7 +13,7 @@ export const initGame = async (gameConfig, callback) => {
     await initUI();
 
     if (gameConfig.type === "online") {
-        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.sn, gameConfig.currentPlayer);
+        gameController = new OnlineGameController(gameConfig.userColor, gameConfig.opponentColor, gameConfig.sn, gameConfig.currentPlayer, gameConfig.numberOfMoves);
     } else {
         gameController = new AIGameController(gameConfig.sn);
     }
@@ -61,6 +61,6 @@ export const initGame = async (gameConfig, callback) => {
 }
 
 export const makeMove = async (data) => {
-    if (!(gameController instanceof OnlineGameController)) throw new Error("");
+    if (!(gameController instanceof OnlineGameController)) throw new Error("Must be online");
     await gameController.displayMove(data);
 }

@@ -1,6 +1,7 @@
 import {GameStatusEnum, PlayerTypesEnum} from "./models/Enums.js";
 import Board from "./models/Board.js";
 import AI from "./utils/ai/AI.js";
+import {showWinnerMessage} from "../ui/main";
 
 export class Game {
     constructor(userColor, opponentColor, currentPlayer, sn, numberOfMoves) {
@@ -12,6 +13,10 @@ export class Game {
         this.selectedPieceLocation = null
         this.movementIsLocked = false
         this.lastMove = null
+
+        if (currentPlayer !== userColor) {
+            this.movementIsLocked = true;
+        }
 
         this.ai = {
             movement: null
@@ -36,8 +41,28 @@ export class Game {
 
     setBoardType(sn) {
         let newBoard = new Board({setupNotation: sn}).serialize();
+
+        let redIndex = newBoard.sn.indexOf("k");
+        let blueIndex = newBoard.sn.indexOf("K");
+
+        if(redIndex === -1 || blueIndex === -1) {
+            this.status = GameStatusEnum.GAME_OVER;
+            this.movementIsLocked = true;
+
+            if (redIndex === -1) {
+                this.winner = "blue";
+            } else {
+                this.winner = "red";
+            }
+
+            if (this.winner === "blue" && this.userColor === "blue" || this.winner === "red" && this.userColor === "red") {
+                showWinnerMessage("You win!")
+            } else {
+                showWinnerMessage("You lose!")
+            }
+        }
+
         this.squares = newBoard.squares;
-        this.winner = newBoard.winner;
         this.sn = newBoard.sn;
    }
 
