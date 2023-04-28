@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {board, scene} from "./scene.js";
 import {SwapPiecesRenderCallback, RotatePieceRenderCallback, MoveObjectRenderCallback,
         KillPieceRenderCallback} from "./RenderCallbacks.js";
+import {soundKill, soundLaser, soundMovement, soundSwap, soundTurn} from "./sounds";
 
 const PIECE_CENTER_Y = 0.438;
 
@@ -137,6 +138,7 @@ board.movePiece = (startCell, endCell) => {
     if (startCell.piece == null || endCell.piece != null) {
         return;
     }
+    soundMovement.play();
     return new Promise((resolve, reject) => {
         const endCoord = board.getCellCenter(endCell);
         const callback = () => {
@@ -151,6 +153,7 @@ board.movePiece = (startCell, endCell) => {
 }
 
 board.rotatePiece = (cell, angle) => {
+    soundTurn.play()
     if (cell.piece == null)
         return;
     return new Promise((resolve, reject) => {
@@ -163,6 +166,7 @@ board.rotatePiece = (cell, angle) => {
 board.swapPieces = (cell1, cell2) => {
     if (cell1.piece == null || cell2.piece == null)
         return;
+    soundSwap.play();
     return new Promise((resolve, reject) => {
         const callback = () => {
             const temp = cell1.piece;
@@ -209,6 +213,7 @@ board.drawLaserSegment = (startCoords, endCoords) => {
 board.killAndRemovePiece = (cell, animationTime = 1000) => {
     if (cell.piece === null)
         return new Promise((resolve) => resolve());
+    soundKill.play();
     return new Promise((resolve) => {
         const callback = () => {
             scene.remove(cell.piece);
@@ -221,6 +226,7 @@ board.killAndRemovePiece = (cell, animationTime = 1000) => {
 }
 
 board.drawLaserPath = (pathSegments, removeTimeout = 1000) => {
+    soundLaser.play();
     let laserSegments = [];
     for (let cellPairIndex in pathSegments) {
         const cellPair = pathSegments[cellPairIndex];
@@ -263,6 +269,7 @@ board.drawLaserPath = (pathSegments, removeTimeout = 1000) => {
 }
 
 board.drawLaserPathWithKill = (pathSegments, removeLaserTimeout = 1000, removePieceAnimationTime = 1000) => {
+    soundLaser.play();
     const laserDrawing = board.drawLaserPath(pathSegments, removeLaserTimeout)
     const lastCell = pathSegments[pathSegments.length - 1].endCell;
     const killPiece = board.killAndRemovePiece(lastCell, removePieceAnimationTime);

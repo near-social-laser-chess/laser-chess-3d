@@ -15,6 +15,7 @@ import Movement from "../game_logic/models/Movement";
 import {showWinnerMessage} from "../ui/main";
 import {HighlightType} from "../ui/board";
 import {PlayerTypesEnum} from "../game_logic/models/Enums";
+import {soundLose, soundWin} from "../ui/sounds";
 
 export class GameController {
     constructor(sn, userColor = PlayerTypesEnum.BLUE, opponentColor = PlayerTypesEnum.RED, currentPlayer = PlayerTypesEnum.BLUE, numberOfMoves = 0) {
@@ -66,10 +67,14 @@ export class GameController {
 
     checkGameFinished() {
         if (this.game.isGameFinished()) {
-            if (this.game.getWinner() !== this.game.userColor)
-                showWinnerMessage("You lose!")
-            else
-                showWinnerMessage("You win!")
+            if (this.game.getWinner() !== this.game.userColor) {
+                soundLose.play();
+                showWinnerMessage("You lose!");
+            }
+            else {
+                soundWin.play();
+                showWinnerMessage("You win!");
+            }
 
             return true;
         }
