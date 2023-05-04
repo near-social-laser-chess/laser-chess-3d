@@ -45,5 +45,9 @@ loadAudio(BASE_URL + '/assets/sounds/win.mp3').then((audio) => {
 
 
 export function playSound(sound) {
-    sound.play();
+    try {
+        sound.play();
+    } catch (e) {
+        console.log(e);
+    }
 }
